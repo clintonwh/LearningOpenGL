@@ -30,6 +30,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		600A6234289F8DE100F770FD /* camera.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = camera.h; sourceTree = "<group>"; };
 		60A9683A2882873C00889B11 /* shader_s.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = shader_s.h; sourceTree = "<group>"; };
 		60A9683F28828DDF00889B11 /* basic.fs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = basic.fs; sourceTree = "<group>"; };
 		60A9684028828DDF00889B11 /* basic.vs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = basic.vs; sourceTree = "<group>"; };
@@ -119,6 +120,7 @@
 				60A9683A2882873C00889B11 /* shader_s.h */,
 				60A9684B2882A68E00889B11 /* constants.h */,
 				60B88DBF288C0DAF00FBDCB9 /* shader_m.h */,
+				600A6234289F8DE100F770FD /* camera.h */,
 			);
 			path = LearnOpenGL;
 			sourceTree = "<group>";
