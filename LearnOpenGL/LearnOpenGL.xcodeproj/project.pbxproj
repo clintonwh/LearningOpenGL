@@ -31,9 +31,11 @@
 
 /* Begin PBXFileReference section */
 		600A6234289F8DE100F770FD /* camera.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = camera.h; sourceTree = "<group>"; };
+		600A6235289FAB3700F770FD /* basicTexture.fs */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = basicTexture.fs; sourceTree = "<group>"; };
+		600A6236289FAB8A00F770FD /* basicTexture.vs */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = basicTexture.vs; sourceTree = "<group>"; };
+		600A6237289FAC0E00F770FD /* basicLight.vs */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = basicLight.vs; sourceTree = "<group>"; };
+		600A6238289FAC0E00F770FD /* basicLight.fs */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = basicLight.fs; sourceTree = "<group>"; };
 		60A9683A2882873C00889B11 /* shader_s.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = shader_s.h; sourceTree = "<group>"; };
-		60A9683F28828DDF00889B11 /* basic.fs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = basic.fs; sourceTree = "<group>"; };
-		60A9684028828DDF00889B11 /* basic.vs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = basic.vs; sourceTree = "<group>"; };
 		60A9684228829AF600889B11 /* wall.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = wall.jpeg; sourceTree = "<group>"; };
 		60A9684528829DAF00889B11 /* container.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = container.jpeg; sourceTree = "<group>"; };
 		60A9684628829DC200889B11 /* awesomeface.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = awesomeface.png; sourceTree = "<group>"; };
@@ -76,8 +78,10 @@
 		60A9683B2882884F00889B11 /* Shaders */ = {
 			isa = PBXGroup;
 			children = (
-				60A9683F28828DDF00889B11 /* basic.fs */,
-				60A9684028828DDF00889B11 /* basic.vs */,
+				600A6238289FAC0E00F770FD /* basicLight.fs */,
+				600A6237289FAC0E00F770FD /* basicLight.vs */,
+				600A6236289FAB8A00F770FD /* basicTexture.vs */,
+				600A6235289FAB3700F770FD /* basicTexture.fs */,
 			);
 			path = Shaders;
 			sourceTree = "<group>";

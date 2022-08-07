@@ -9,8 +9,12 @@
 #define constants_h
 
 //ShaderConstants
-    const char* vertexShaderPath = "/Users/williamclinton/Xcode/LearnOpenGL/Shaders/basic.vs";
-    const char* fragmentShaderPath = "/Users/williamclinton/Xcode/LearnOpenGL/Shaders/basic.fs";
+    const char* vertexShaderPath = "/Users/williamclinton/Xcode/LearnOpenGL/Shaders/basicTexture.vs";
+    const char* fragmentShaderPath = "/Users/williamclinton/Xcode/LearnOpenGL/Shaders/basicTexture.fs";
+    //Light
+    const char* lightTextureVertexShaderPath = "/Users/williamclinton/Xcode/LearnOpenGL/Shaders/basicTexture.vs";
+    const char* lightFragmentShaderPath = "/Users/williamclinton/Xcode/LearnOpenGL/Shaders/basicLight.fs";
+
 
 //TextureConstants
     const char* wallTexturePath = "/Users/williamclinton/Xcode/LearnOpenGL/Textures/wall.jpeg";
