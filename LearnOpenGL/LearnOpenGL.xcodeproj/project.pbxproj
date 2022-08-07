@@ -35,6 +35,8 @@
 		600A6236289FAB8A00F770FD /* basicTexture.vs */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = basicTexture.vs; sourceTree = "<group>"; };
 		600A6237289FAC0E00F770FD /* basicLight.vs */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = basicLight.vs; sourceTree = "<group>"; };
 		600A6238289FAC0E00F770FD /* basicLight.fs */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = basicLight.fs; sourceTree = "<group>"; };
+		600A6239289FB07700F770FD /* lightCube.fs */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = lightCube.fs; sourceTree = "<group>"; };
+		600A623A289FB07700F770FD /* lightCube.vs */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = lightCube.vs; sourceTree = "<group>"; };
 		60A9683A2882873C00889B11 /* shader_s.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = shader_s.h; sourceTree = "<group>"; };
 		60A9684228829AF600889B11 /* wall.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = wall.jpeg; sourceTree = "<group>"; };
 		60A9684528829DAF00889B11 /* container.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = container.jpeg; sourceTree = "<group>"; };
@@ -78,6 +80,8 @@
 		60A9683B2882884F00889B11 /* Shaders */ = {
 			isa = PBXGroup;
 			children = (
+				600A6239289FB07700F770FD /* lightCube.fs */,
+				600A623A289FB07700F770FD /* lightCube.vs */,
 				600A6238289FAC0E00F770FD /* basicLight.fs */,
 				600A6237289FAC0E00F770FD /* basicLight.vs */,
 				600A6236289FAB8A00F770FD /* basicTexture.vs */,
