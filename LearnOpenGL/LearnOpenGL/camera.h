@@ -65,6 +65,7 @@ public:
     glm::mat4 GetViewMatrix()
     {
         return glm::lookAt(Position, Position + Front, Up);
+        //return calculateLookAt(Position, Front, Up);
     }
 
     // processes input received from any keyboard-like input system. Accepts input parameter in the form of camera defined ENUM (to abstract it from windowing systems)
@@ -111,6 +112,38 @@ public:
             Zoom = 1.0f;
         if (Zoom > 45.0f)
             Zoom = 45.0f;
+    }
+    
+    glm::mat4 calculateLookAt(glm::vec3 cameraPos, glm::vec3 cameraFront, glm::vec3 worldUp){
+        //create target vector
+        glm::vec3 cameraTarget = cameraPos + cameraFront;
+        //create camera direction vector
+        glm::vec3 cameraDir = glm::normalize(cameraPos - cameraTarget);
+        //create right vector
+        glm::vec3 cameraRight = glm::normalize(glm::cross(glm::normalize(worldUp), cameraDir));
+        //create up vector
+        glm::vec3 cameraUp = glm::cross(cameraDir, cameraRight);
+        
+        //matrix[col][row]
+        glm::mat4 tempDirMatrix = glm::mat4(1.0f);
+        tempDirMatrix[0][0] = cameraRight.x;
+        tempDirMatrix[1][0] = cameraRight.y;
+        tempDirMatrix[2][0] = cameraRight.z;
+        
+        tempDirMatrix[0][1] = cameraUp.x;
+        tempDirMatrix[1][1] = cameraUp.y;
+        tempDirMatrix[2][1] = cameraUp.z;
+        
+        tempDirMatrix[0][2] = cameraDir.x;
+        tempDirMatrix[1][2] = cameraDir.y;
+        tempDirMatrix[2][2] = cameraDir.z;
+        
+        glm::mat4 tempPosMatrix = glm::mat4(1.0f);
+        tempPosMatrix[3][0] = -cameraPos.x;
+        tempPosMatrix[3][1] = -cameraPos.y;
+        tempPosMatrix[3][2] = -cameraPos.z;
+        
+        return tempDirMatrix * tempPosMatrix;
     }
 
 private:
