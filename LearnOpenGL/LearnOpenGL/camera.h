@@ -21,8 +21,6 @@ const float PITCH       =  0.0f;
 const float SPEED       =  2.5f;
 const float SENSITIVITY =  0.1f;
 const float ZOOM        =  45.0f;
-const glm::vec3 forwardBackwardMovement = glm::vec3 (0.0f,0.0f,-1.0f);
-const glm::vec3 rightLeftMovement = glm::vec3 (1.0f,0.0f,0.0f);
 
 // An abstract camera class that processes input and calculates the corresponding Euler Angles, Vectors and Matrices for use in OpenGL
 class Camera
@@ -73,13 +71,15 @@ public:
     {
         float velocity = MovementSpeed * deltaTime;
         if (direction == FORWARD)
-            Position += forwardBackwardMovement * velocity;
+            Position += Front * velocity;
         if (direction == BACKWARD)
-            Position -= forwardBackwardMovement * velocity;
+            Position -= Front * velocity;
         if (direction == LEFT)
-            Position -= rightLeftMovement * velocity;
+            Position -= Right * velocity;
         if (direction == RIGHT)
-            Position += rightLeftMovement * velocity;
+            Position += Right * velocity;
+        // make sure the user stays at the ground level
+        Position.y = 0.0f; // <-- this one-liner keeps the user at the ground level (xz plane)
     }
 
     // processes input received from a mouse input system. Expects the offset value in both the x and y direction.
