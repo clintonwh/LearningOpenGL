@@ -20,6 +20,10 @@ void updateDeltaTime();
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 void setupTexture(unsigned int texture, const char* texturePath, bool flipImage, GLenum format);
+void setMaterialForShader(Shader shader);
+
+//material
+int materialValue = -1;
 
 // settings
 const unsigned int SCR_WIDTH = 800;
@@ -161,6 +165,7 @@ int main()
     // texture coord attribute
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
+
     
     // render loop
     // -----------
@@ -180,9 +185,23 @@ int main()
         lightingShader.use();
         lightingShader.setVec3("objectColor", 1.0f, 0.5f, 0.31f);
         lightingShader.setVec3("lightColor",  1.0f, 1.0f, 1.0f);
-        lightingShader.setVec3("lightPos", lightPos);
-        lightingShader.setVec3("viewPos", camera.Position); 
+        lightingShader.setVec3("light.position", lightPos);
+        lightingShader.setVec3("viewPos", camera.Position);
+        
+        setMaterialForShader(lightingShader);
 
+        glm::vec3 lightColor;
+        lightColor.x = sin(glfwGetTime() * 2.0f);
+        lightColor.y = sin(glfwGetTime() * 0.7f);
+        lightColor.z = sin(glfwGetTime() * 1.3f);
+          
+        glm::vec3 diffuseColor = lightColor   * glm::vec3(0.5f);
+        glm::vec3 ambientColor = diffuseColor * glm::vec3(0.2f);
+          
+        lightingShader.setVec3("light.ambient", ambientColor);
+        lightingShader.setVec3("light.diffuse", diffuseColor);
+        lightingShader.setVec3("light.specular", 1.0f, 1.0f, 1.0f); 
+        
         // view/projection transformations
         glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
         glm::mat4 view = camera.GetViewMatrix();
@@ -191,6 +210,7 @@ int main()
 
         // world transformation
         glm::mat4 model = generateModelMatrix();
+        
         lightingShader.setMat4("model", model);
 
         // render the cube
@@ -206,7 +226,11 @@ int main()
         model = glm::scale(model, glm::vec3(0.2f)); // a smaller cube
         lightCubeShader.setMat4("model", model);
         
-        lightPos.x = 1.0f + sin(glfwGetTime()) * 2.0f;
+        lightCubeShader.setVec3("ambientColor", ambientColor);
+        lightCubeShader.setVec3("diffusetColor", diffuseColor);
+        
+//        lightPos.x = sin(glfwGetTime()) * 2.0f;
+//        lightPos.z = cos(glfwGetTime()) * 2.0f;
         
         glBindVertexArray(lightCubeVAO);
         glDrawArrays(GL_TRIANGLES, 0, 36);
@@ -254,6 +278,12 @@ void processInput(GLFWwindow *window)
         camera.ProcessKeyboard(LEFT, deltaTime);
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
         camera.ProcessKeyboard(RIGHT, deltaTime);
+    
+    //Change material of cube
+    for(int i = 0; i < 10; i++){
+        if(glfwGetKey(window, GLFW_KEY_0+i) == GLFW_PRESS)
+            materialValue = i;
+    }
 }
 
 // glfw: whenever the window size changed (by OS or user resize) this callback function executes
@@ -268,7 +298,7 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 glm::mat4 generateModelMatrix()
 {
     glm::mat4 model = glm::mat4(1.0f);
-    //model = glm::rotate(model, (float)glfwGetTime() * glm::radians(50.0f), glm::vec3(0.5f, 1.0f, 0.0f));
+    //model = glm::rotate(model, (float)glfwGetTime() * glm::radians(50.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 
     return model;
 }
@@ -348,4 +378,48 @@ void setupTexture(unsigned int texture, const char* texturePath, bool flipImage,
         std::cout << "Failed to load texture" << std::endl;
     }
     stbi_image_free(data);
+}
+
+void setMaterialForShader(Shader shader){
+    
+    switch (materialValue) {
+        case 1://emerald
+            shader.setVec3("material.ambient", 0.0215f, 0.1745f, 0.0215f);
+            shader.setVec3("material.diffuse", 0.07568f, 0.61424f, 0.07568f);
+            shader.setVec3("material.specular", 0.633f, 0.727811f, 0.633f);
+            shader.setFloat("material.shininess", 0.6f);
+            break;
+        case 2://green rubber
+            shader.setVec3("material.ambient", 0.0f, 0.05f, 0.0f);
+            shader.setVec3("material.diffuse", 0.4f, 0.5f, 0.4f);
+            shader.setVec3("material.specular", 0.04f, 0.07f, 0.04f);
+            shader.setFloat("material.shininess", 0.078125f);
+            break;
+        case 3://bronze
+            shader.setVec3("material.ambient", 0.2125f, 0.1275f, 0.054f);
+            shader.setVec3("material.diffuse", 0.714f, 0.4284f, 0.18144f);
+            shader.setVec3("material.specular", 0.393548f, 0.271906f, 0.166721f);
+            shader.setFloat("material.shininess", 0.2f);
+            break;
+        case 4://chrome
+            shader.setVec3("material.ambient", 0.25f, 0.25f, 0.25f);
+            shader.setVec3("material.diffuse", 0.4f, 0.4f, 0.4f);
+            shader.setVec3("material.specular", 0.774597f, 0.774597f, 0.774597f);
+            shader.setFloat("material.shininess", 0.6f);
+            break;
+        //    0.05f    0.05    0.05    0.5f    0.5    0.5    0.7f    0.7    0.7    0.078125
+        case 5://white rubber
+            shader.setVec3("material.ambient", 0.25f, 0.25f, 0.25f);
+            shader.setVec3("material.diffuse", 0.4f, 0.4f, 0.4f);
+            shader.setVec3("material.specular", 0.774597f, 0.774597f, 0.774597f);
+            shader.setFloat("material.shininess", 0.078125f);
+            break;
+        default:
+            shader.setVec3("material.ambient", 0.05f, 0.5f, 0.05f);
+            shader.setVec3("material.diffuse", 0.5f, 0.5f, 0.5f);
+            shader.setVec3("material.specular", 0.7f, 0.7f, 0.7f);
+            shader.setFloat("material.shininess", 32.0f);
+            break;
+    }
+    
 }
