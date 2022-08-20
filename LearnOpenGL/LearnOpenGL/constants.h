@@ -27,6 +27,11 @@ const char* lightCubeFragmentShaderPath = "/Users/williamclinton/Xcode/LearnOpen
 const char* wallTexturePath = "/Users/williamclinton/Xcode/LearnOpenGL/Textures/wall.jpeg";
 const char* containerTexturePath = "/Users/williamclinton/Xcode/LearnOpenGL/Textures/container.jpeg";
 const char* awesomefaceTexturePath = "/Users/williamclinton/Xcode/LearnOpenGL/Textures/awesomeface.png";
+const char* crateTexturePath = "/Users/williamclinton/Xcode/LearnOpenGL/Textures/crate.png";
+const char* crateSpecularTexturePath = "/Users/williamclinton/Xcode/LearnOpenGL/Textures/crateSpecular.png";
+const char* crateSpecularColourTexturePath = "/Users/williamclinton/Xcode/LearnOpenGL/Textures/crateSpecularColour.png";
+const char* crateEmissionTexturePath = "/Users/williamclinton/Xcode/LearnOpenGL/Textures/crateEmissionMap.jpeg";
+
 
 
 #endif /* constants_h */

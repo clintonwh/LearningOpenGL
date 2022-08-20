@@ -39,16 +39,16 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "EC81488B-9E90-46EF-A101-FF1584F8A9B8"
+            uuid = "DAD4967E-65CE-470D-A559-827ADED45C9F"
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "LearnOpenGL/main.cpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "355"
-            endingLineNumber = "355"
-            landmarkName = "setupTexture(texture, texturePath, flipImage, format)"
+            startingLineNumber = "379"
+            endingLineNumber = "379"
+            landmarkName = "loadTexture(path)"
             landmarkType = "9">
          </BreakpointContent>
       </BreakpointProxy>

@@ -37,6 +37,8 @@
 		600A6238289FAC0E00F770FD /* basicLight.fs */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = basicLight.fs; sourceTree = "<group>"; };
 		600A6239289FB07700F770FD /* lightCube.fs */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = lightCube.fs; sourceTree = "<group>"; };
 		600A623A289FB07700F770FD /* lightCube.vs */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = lightCube.vs; sourceTree = "<group>"; };
+		6043774328B0C00C00634484 /* crateSpecularColour.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = crateSpecularColour.png; sourceTree = "<group>"; };
+		6043774428B0C3D200634484 /* crateEmissionMap.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = crateEmissionMap.jpeg; sourceTree = "<group>"; };
 		60A9683A2882873C00889B11 /* shader_s.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = shader_s.h; sourceTree = "<group>"; };
 		60A9684228829AF600889B11 /* wall.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = wall.jpeg; sourceTree = "<group>"; };
 		60A9684528829DAF00889B11 /* container.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = container.jpeg; sourceTree = "<group>"; };
@@ -46,6 +48,8 @@
 		60A9684B2882A68E00889B11 /* constants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = constants.h; sourceTree = "<group>"; };
 		60B88DBE288BCC4F00FBDCB9 /* glm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = glm; path = Externals/Include/glm; sourceTree = SOURCE_ROOT; };
 		60B88DBF288C0DAF00FBDCB9 /* shader_m.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = shader_m.h; sourceTree = "<group>"; };
+		60CB4EE028B0B53300FABDCE /* crate.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = crate.png; sourceTree = "<group>"; };
+		60CB4EE128B0B95400FABDCE /* crateSpecular.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = crateSpecular.png; sourceTree = "<group>"; };
 		60DE22AD284DD83000942C33 /* LearnOpenGL */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = LearnOpenGL; sourceTree = BUILT_PRODUCTS_DIR; };
 		60DE22B0284DD83000942C33 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		60DE22BA284DDA8100942C33 /* libglfw3.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libglfw3.a; sourceTree = "<group>"; };
@@ -93,6 +97,10 @@
 		60A9684128829ACF00889B11 /* Textures */ = {
 			isa = PBXGroup;
 			children = (
+				6043774428B0C3D200634484 /* crateEmissionMap.jpeg */,
+				6043774328B0C00C00634484 /* crateSpecularColour.png */,
+				60CB4EE128B0B95400FABDCE /* crateSpecular.png */,
+				60CB4EE028B0B53300FABDCE /* crate.png */,
 				60A9684628829DC200889B11 /* awesomeface.png */,
 				60A9684528829DAF00889B11 /* container.jpeg */,
 				60A9684228829AF600889B11 /* wall.jpeg */,
