@@ -20,7 +20,6 @@ void updateDeltaTime();
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 unsigned int loadTexture(char const * path);
-void setMaterialForShader(Shader shader);
 
 //material
 int materialValue = -1;
@@ -41,7 +40,7 @@ float lastY = SCR_HEIGHT / 2.0f;
 bool firstMouse = true;
 
 //deltatime setup variable
-float deltaTime = 0.0f;    // Time between current frame and last frame
+float deltaTime = 0.0f; // Time between current frame and last frame
 float lastFrame = 0.0f; // Time of last frame
 
 glm::vec3 lightPos(1.2f, 0.0f, 1.5f);
@@ -90,7 +89,6 @@ int main()
     // ------------------------------------
     Shader lightingShader(textureVertexShaderPath, textureFragmentShaderPath);
     Shader lightCubeShader(lightCubeVertexShaderPath, lightCubeFragmentShaderPath);
-
 
     // set up vertex data (and buffer(s)) and configure vertex attributes
     // ------------------------------------------------------------------
@@ -160,10 +158,10 @@ int main()
     };
     
     glm::vec3 pointLightColors[] = {
-        glm::vec3( 1.0f, 0.0f, 0.0f),
-        glm::vec3( 0.0f, 1.0f, 0.0f),
-        glm::vec3( 0.0f, 0.0f, 1.0f),
-        glm::vec3( 1.0f, 0.5f, 1.0f)
+        glm::vec3( 1.0f, 1.0f, 1.0f),
+        glm::vec3( 1.0f, 1.0f, 1.0f),
+        glm::vec3( 1.0f, 1.0f, 1.0f),
+        glm::vec3( 1.0f, 1.0f, 1.0f)
     };
     
     unsigned int VBO, cubeVAO;
@@ -204,7 +202,10 @@ int main()
     lightingShader.setInt("material.diffuse", 0);
     lightingShader.setInt("material.specular", 1);
     
-    // render loop
+    unsigned int numberOfCubes = sizeof(cubePositions)/sizeof(cubePositions[0]);
+    unsigned int numberOfPointLights = sizeof(pointLightPositions)/sizeof(pointLightPositions[0]);
+        
+// render loop
     // -----------
     while (!glfwWindowShouldClose(window))
     {
@@ -228,38 +229,21 @@ int main()
         lightingShader.setVec3("dirLight.ambient", 0.05f, 0.05f, 0.05f);
         lightingShader.setVec3("dirLight.diffuse", 0.1f, 0.1f, 0.1f);
         lightingShader.setVec3("dirLight.specular", 1.0f, 1.0f, 1.0f);
-        // point light 1
-        lightingShader.setVec3("pointLights[0].position",  pointLightPositions[0]);
-        lightingShader.setVec3("pointLights[0].ambient",  pointLightColors[0] * 0.1f);
-        lightingShader.setVec3("pointLights[0].diffuse",  pointLightColors[0]);
-        lightingShader.setVec3("pointLights[0].specular", pointLightColors[0]);
-        lightingShader.setFloat("pointLights[0].constant",  1.0f);
-        lightingShader.setFloat("pointLights[0].linear",    0.09f);
-        lightingShader.setFloat("pointLights[0].quadratic", 0.032f);
-        // point light 2
-        lightingShader.setVec3("pointLights[1].position",  pointLightPositions[1]);
-        lightingShader.setVec3("pointLights[1].ambient",  pointLightColors[1] * 0.1f);
-        lightingShader.setVec3("pointLights[1].diffuse",  pointLightColors[1]);
-        lightingShader.setVec3("pointLights[1].specular", pointLightColors[1]);
-        lightingShader.setFloat("pointLights[1].constant",  1.0f);
-        lightingShader.setFloat("pointLights[1].linear",    0.09f);
-        lightingShader.setFloat("pointLights[1].quadratic", 0.032f);
-        // point light 3
-        lightingShader.setVec3("pointLights[2].position",  pointLightPositions[2]);
-        lightingShader.setVec3("pointLights[2].ambient",  pointLightColors[2] * 0.1f);
-        lightingShader.setVec3("pointLights[2].diffuse",  pointLightColors[2]);
-        lightingShader.setVec3("pointLights[2].specular", pointLightColors[2]);
-        lightingShader.setFloat("pointLights[2].constant",  1.0f);
-        lightingShader.setFloat("pointLights[2].linear",    0.022f);
-        lightingShader.setFloat("pointLights[2].quadratic", 0.0019f);
-        // point light 4
-        lightingShader.setVec3("pointLights[3].position",  pointLightPositions[3]);
-        lightingShader.setVec3("pointLights[3].ambient",  pointLightColors[3] * 0.1f);
-        lightingShader.setVec3("pointLights[3].diffuse",  pointLightColors[3]);
-        lightingShader.setVec3("pointLights[3].specular", pointLightColors[3]);
-        lightingShader.setFloat("pointLights[3].constant",  1.0f);
-        lightingShader.setFloat("pointLights[3].linear",    0.09f);
-        lightingShader.setFloat("pointLights[3].quadratic", 0.032f);
+        
+        //point lights
+        for(unsigned int i = 0; i < numberOfPointLights; i++)
+        {
+            std::string pointLightIndex = "pointLights[" + std::to_string( i ) + "].";
+
+            lightingShader.setVec3(pointLightIndex + "position",  pointLightPositions[i]);
+            lightingShader.setVec3(pointLightIndex + "ambient",  pointLightColors[i] * 0.1f);
+            lightingShader.setVec3(pointLightIndex + "diffuse",  pointLightColors[i]);
+            lightingShader.setVec3(pointLightIndex + "specular", pointLightColors[i]);
+            lightingShader.setFloat(pointLightIndex + "constant",  1.0f);
+            lightingShader.setFloat(pointLightIndex + "linear",    0.09f);
+            lightingShader.setFloat(pointLightIndex + "quadratic", 0.032f);
+        }
+        
         // spot light
         lightingShader.setVec3("spotLight.position",  camera.Position);
         lightingShader.setVec3("spotLight.direction",  camera.Front);
@@ -288,7 +272,7 @@ int main()
         
         //render containers
         glBindVertexArray(cubeVAO);
-        for(unsigned int i = 0; i < 10; i++)
+        for(unsigned int i = 0; i < numberOfCubes; i++)
         {
             glm::mat4 model = glm::mat4(1.0f);
             model = glm::translate(model, cubePositions[i]);
@@ -306,7 +290,7 @@ int main()
         
         //render points of light
         glBindVertexArray(lightCubeVAO);
-        for(unsigned int i = 0; i < 10; i++)
+        for(unsigned int i = 0; i < numberOfPointLights; i++)
         {
             glm::mat4 model = glm::mat4(1.0f);
             model = glm::translate(model, pointLightPositions[i]);
@@ -467,48 +451,4 @@ unsigned int loadTexture(char const * path)
     }
 
     return textureID;
-}
-
-void setMaterialForShader(Shader shader){
-    
-    switch (materialValue) {
-        case 1://emerald
-            shader.setVec3("material.ambient", 0.0215f, 0.1745f, 0.0215f);
-            shader.setVec3("material.diffuse", 0.07568f, 0.61424f, 0.07568f);
-            shader.setVec3("material.specular", 0.633f, 0.727811f, 0.633f);
-            shader.setFloat("material.shininess", 0.6f);
-            break;
-        case 2://green rubber
-            shader.setVec3("material.ambient", 0.0f, 0.05f, 0.0f);
-            shader.setVec3("material.diffuse", 0.4f, 0.5f, 0.4f);
-            shader.setVec3("material.specular", 0.04f, 0.07f, 0.04f);
-            shader.setFloat("material.shininess", 0.078125f);
-            break;
-        case 3://bronze
-            shader.setVec3("material.ambient", 0.2125f, 0.1275f, 0.054f);
-            shader.setVec3("material.diffuse", 0.714f, 0.4284f, 0.18144f);
-            shader.setVec3("material.specular", 0.393548f, 0.271906f, 0.166721f);
-            shader.setFloat("material.shininess", 0.2f);
-            break;
-        case 4://chrome
-            shader.setVec3("material.ambient", 0.25f, 0.25f, 0.25f);
-            shader.setVec3("material.diffuse", 0.4f, 0.4f, 0.4f);
-            shader.setVec3("material.specular", 0.774597f, 0.774597f, 0.774597f);
-            shader.setFloat("material.shininess", 0.6f);
-            break;
-        //    0.05f    0.05    0.05    0.5f    0.5    0.5    0.7f    0.7    0.7    0.078125
-        case 5://white rubber
-            shader.setVec3("material.ambient", 0.25f, 0.25f, 0.25f);
-            shader.setVec3("material.diffuse", 0.4f, 0.4f, 0.4f);
-            shader.setVec3("material.specular", 0.774597f, 0.774597f, 0.774597f);
-            shader.setFloat("material.shininess", 0.078125f);
-            break;
-        default:
-            shader.setVec3("material.ambient", 0.05f, 0.5f, 0.05f);
-            shader.setVec3("material.diffuse", 0.5f, 0.5f, 0.5f);
-            shader.setVec3("material.specular", 0.7f, 0.7f, 0.7f);
-            shader.setFloat("material.shininess", 32.0f);
-            break;
-    }
-    
 }
