@@ -31,6 +31,8 @@ const char* crateTexturePath = "/Users/williamclinton/Xcode/LearnOpenGL/Textures
 const char* crateSpecularTexturePath = "/Users/williamclinton/Xcode/LearnOpenGL/Textures/crateSpecular.png";
 const char* crateSpecularColourTexturePath = "/Users/williamclinton/Xcode/LearnOpenGL/Textures/crateSpecularColour.png";
 const char* crateEmissionTexturePath = "/Users/williamclinton/Xcode/LearnOpenGL/Textures/crateEmissionMap.jpeg";
+const char* crateSpecularGreyScaleTexturePath = "/Users/williamclinton/Xcode/LearnOpenGL/Textures/crateGreyScale.png";
+const char* crateSpecularGreyScaleDarkTexturePath = "/Users/williamclinton/Xcode/LearnOpenGL/Textures/crateGreyScaleDark.png";
 
 
 

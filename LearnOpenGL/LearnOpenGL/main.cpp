@@ -89,7 +89,7 @@ int main()
     // build and compile our shader zprogram
     // ------------------------------------
     Shader lightingShader(textureVertexShaderPath, textureFragmentShaderPath);
-    //Shader lightCubeShader(lightCubeVertexShaderPath, lightCubeFragmentShaderPath);
+    Shader lightCubeShader(lightCubeVertexShaderPath, lightCubeFragmentShaderPath);
 
 
     // set up vertex data (and buffer(s)) and configure vertex attributes
@@ -156,11 +156,10 @@ int main()
     glGenVertexArrays(1, &cubeVAO);
     glGenBuffers(1, &VBO);
     
-    glBindVertexArray(cubeVAO);
-
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
+    glBindVertexArray(cubeVAO);
+    
     // position attribute
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
@@ -171,34 +170,26 @@ int main()
     glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
     glEnableVertexAttribArray(2);
 
-//    unsigned int lightCubeVAO;
-//    glGenVertexArrays(1, &lightCubeVAO);
-//    glBindVertexArray(lightCubeVAO);
-//    // we only need to bind to the VBO, the container's VBO's data already contains the data.
-//    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-//    // set the vertex attribute
-//    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
-//    glEnableVertexAttribArray(0);
-//    // normal attribute
-//    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
-//    glEnableVertexAttribArray(1);
-//    // texcoord attribute
-//    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
-//    glEnableVertexAttribArray(2);
+    unsigned int lightCubeVAO;
+    glGenVertexArrays(1, &lightCubeVAO);
+    glBindVertexArray(lightCubeVAO);
+    // we only need to bind to the VBO, the container's VBO's data already contains the data.
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    // set the vertex attribute
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(0);
 
     // load textures (we now use a utility function to keep the code more organized)
     // -----------------------------------------------------------------------------
     unsigned int diffuseMap = loadTexture(crateTexturePath);
-    unsigned int specularMap = loadTexture(crateSpecularColourTexturePath);
-    unsigned int emissionMap = loadTexture(crateEmissionTexturePath);
+    unsigned int specularMap = loadTexture(crateSpecularTexturePath);
 
     // shader configuration
     // --------------------
     lightingShader.use();
     lightingShader.setInt("material.diffuse", 0);
     lightingShader.setInt("material.specular", 1);
-    lightingShader.setInt("material.emission", 2);
-
+    
     // render loop
     // -----------
     while (!glfwWindowShouldClose(window))
@@ -211,23 +202,23 @@ int main()
 
         // render
         // ------
-        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+        glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // also clear the depth buffer now!
                 
         lightingShader.use();
-        lightingShader.setVec3("objectColor", 1.0f, 0.5f, 0.31f);
-        lightingShader.setVec3("lightColor",  1.0f, 1.0f, 1.0f);
         lightingShader.setVec3("light.position", lightPos);
         lightingShader.setVec3("viewPos", camera.Position);
         
-        setMaterialForShader(lightingShader);
+        //setMaterialForShader(lightingShader);
         
-        lightingShader.setVec3("light.direction", -0.2f, -1.0f, -0.3f);
         lightingShader.setVec3("light.ambient",  0.2f, 0.2f, 0.2f);
-        lightingShader.setVec3("light.diffuse",  0.5f, 0.5f, 0.5f); // darken diffuse light a bit
+        lightingShader.setVec3("light.diffuse",  0.5f, 0.5f, 0.5f);
         lightingShader.setVec3("light.specular", 1.0f, 1.0f, 1.0f);
         
-        lightingShader.setVec3("material.specular", 0.5f, 0.5f, 0.5f);
+        lightingShader.setFloat("light.constant",  1.0f);
+        lightingShader.setFloat("light.linear",    0.09f);
+        lightingShader.setFloat("light.quadratic", 0.032f);
+        
         lightingShader.setFloat("material.shininess", 32.0f);
         
         // view/projection transformations
@@ -249,10 +240,8 @@ int main()
         glActiveTexture(GL_TEXTURE1);
         glBindTexture(GL_TEXTURE_2D, specularMap);
         
-//        // bind emssion map
-//        glActiveTexture(GL_TEXTURE2);
-//        glBindTexture(GL_TEXTURE_2D, emissionMap);
-        
+        //render containers
+        glBindVertexArray(cubeVAO);
         for(unsigned int i = 0; i < 10; i++)
         {
             glm::mat4 model = glm::mat4(1.0f);
@@ -265,19 +254,19 @@ int main()
         }
         
         // also draw the lamp object
-//        lightCubeShader.use();
-//        lightCubeShader.setMat4("projection", projection);
-//        lightCubeShader.setMat4("view", view);
-//        model = glm::mat4(1.0f);
-//        model = glm::translate(model, lightPos);
-//        model = glm::scale(model, glm::vec3(0.2f)); // a smaller cube
-//        lightCubeShader.setMat4("model", model);
-//
-//        lightPos.x = sin(glfwGetTime()) * 2.0f;
-//        lightPos.z = cos(glfwGetTime()) * 2.0f;
-//
-//        glBindVertexArray(lightCubeVAO);
-//        glDrawArrays(GL_TRIANGLES, 0, 36);
+        lightCubeShader.use();
+        lightCubeShader.setMat4("projection", projection);
+        lightCubeShader.setMat4("view", view);
+        glm::mat4 model = glm::mat4(1.0f);
+        model = glm::translate(model, lightPos);
+        model = glm::scale(model, glm::vec3(0.2f)); // a smaller cube
+        lightCubeShader.setMat4("model", model);
+
+        lightPos.x = sin(glfwGetTime()) * 2.0f;
+        lightPos.z = cos(glfwGetTime()) * 2.0f;
+
+        glBindVertexArray(lightCubeVAO);
+        glDrawArrays(GL_TRIANGLES, 0, 36);
         
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         // -------------------------------------------------------------------------------
