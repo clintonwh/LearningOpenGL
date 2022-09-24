@@ -15,6 +15,7 @@
 		60DE22C7284DDC9200942C33 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 60DE22C6284DDC9200942C33 /* CoreFoundation.framework */; };
 		60DE22C9284DDC9E00942C33 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 60DE22C8284DDC9E00942C33 /* Foundation.framework */; };
 		60DE22CB284DDCAA00942C33 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 60DE22CA284DDCAA00942C33 /* CoreGraphics.framework */; };
+		60E6F1D728D6D47A009252A3 /* UseImGui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 60E6F1D528D6D47A009252A3 /* UseImGui.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -62,6 +63,9 @@
 		60DE22C6284DDC9200942C33 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
 		60DE22C8284DDC9E00942C33 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		60DE22CA284DDCAA00942C33 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		60E6F1D528D6D47A009252A3 /* UseImGui.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = UseImGui.cpp; sourceTree = "<group>"; };
+		60E6F1D628D6D47A009252A3 /* UseImGui.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = UseImGui.hpp; sourceTree = "<group>"; };
+		60E6F1DF28D70247009252A3 /* imgui */ = {isa = PBXFileReference; lastKnownFileType = folder; path = imgui; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -137,6 +141,8 @@
 				60A9684B2882A68E00889B11 /* constants.h */,
 				60B88DBF288C0DAF00FBDCB9 /* shader_m.h */,
 				600A6234289F8DE100F770FD /* camera.h */,
+				60E6F1D528D6D47A009252A3 /* UseImGui.cpp */,
+				60E6F1D628D6D47A009252A3 /* UseImGui.hpp */,
 			);
 			path = LearnOpenGL;
 			sourceTree = "<group>";
@@ -154,6 +160,7 @@
 		60DE22B8284DD90900942C33 /* Include */ = {
 			isa = PBXGroup;
 			children = (
+				60E6F1DF28D70247009252A3 /* imgui */,
 				60DE22BE284DDB1400942C33 /* KHR */,
 				60DE22BD284DDB0A00942C33 /* glad */,
 				60DE22BC284DDACE00942C33 /* GLFW */,
@@ -242,6 +249,7 @@
 			files = (
 				60DE22B1284DD83000942C33 /* main.cpp in Sources */,
 				60DE22C0284DDB5300942C33 /* glad.c in Sources */,
+				60E6F1D728D6D47A009252A3 /* UseImGui.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
