@@ -5,7 +5,9 @@
 //  Created by William Clinton on 18/09/2022.
 //
 
+#include "LightValues.h"
 #include "UseImGui.hpp"
+#include "iostream"
 
 
 void UseImGui::Init(GLFWwindow* window, const char* glsl_version) {
@@ -26,15 +28,23 @@ void UseImGui::NewFrame() {
 }
 
 
-void render_Light()
+void render_Light(LightValues lightValues)
 {
-//    //Background Color
-//    ImGui::ColorEdit3("Background", backgroundColor);
-//
-//    //directional light
-//    ImGui::SliderFloat("Dir Ambient", &dirAmbIntensity, 0, 1 );
-//    ImGui::SliderFloat("Dir Diffuse", &dirDiffIntensity, 0, 1 );
-//
+    //Background Color
+    float* lightValue = lightValues.GetBackgroundColor();
+    ImGui::ColorEdit3("Background", lightValue);
+    lightValues.SetBackgroundColor(lightValue);
+
+    //directional light
+    
+    float lightIntensity = lightValues.GetDirAmbIntensity();
+    ImGui::SliderFloat("Dir Ambient", &lightIntensity, 0, 1 );
+    lightValues.SetDirAmbIntensity(lightIntensity);
+    
+    lightIntensity = lightValues.GetDirDiffIntensity();
+    ImGui::SliderFloat("Dir Diffuse", &lightIntensity, 0, 1 );
+    lightValues.SetDirDiffIntensity(lightIntensity);
+
 //    for(int i = 0; i < 4; i++){
 //        std::string colorName = "Color ";
 //        colorName += std::to_string(i);
@@ -45,16 +55,21 @@ void render_Light()
 //        std::string colorIntensity = colorName + " Intensity";
 //        ImGui::SliderFloat(colorIntensity.c_str(), &pointLightIntensity[i], -1, 1);
 //    }
-//
-//    //flash light
-//    ImGui::SliderFloat("SpotLight Ambient", &spotLightAmbIntensity, 0, 1 );
-//    ImGui::SliderFloat("SpotLight Diffuse", &spotLightDiffIntensity, 0, 1 );
+
+    //flash light
+    
+    lightIntensity = lightValues.GetSpotLightAmbIntensity();
+    ImGui::SliderFloat("SpotLight Ambient", &lightIntensity, 0, 1 );
+    lightValues.SetSpotLightAmbIntensity(lightIntensity);
+    
+    lightIntensity = lightValues.GetSpotLightDiffIntensity();
+    ImGui::SliderFloat("SpotLight Diffuse", &lightIntensity, 0, 1 );
+    lightValues.SetSpotLightDiffIntensity(lightIntensity);
 }
 
-
-void UseImGui::Update() {
+void UseImGui::Update(LightValues lightValues) {
     ImGui::Begin("Controls");
-    render_Light();
+    render_Light(lightValues);
     ImGui::End();
 }
 

@@ -29,7 +29,7 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 unsigned int loadTexture(char const * path);
 void mouseControls(GLFWwindow* window);
 
-LightValues lightValues = LightValues();
+//LightValues lightValues = LightValues();
 
 //material
 int materialValue = -1;
