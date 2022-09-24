@@ -1,9 +1,9 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-#include <imgui/imgui.h>
-//#include <imgui/imgui_impl_glfw.h>
-//#include <imgui/imgui_impl_opengl3.h>
+#include <imgui.h>
+#include <imgui_impl_glfw.h>
+#include <imgui_impl_opengl3.h>
 
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
@@ -27,13 +27,17 @@ void updateDeltaTime();
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 unsigned int loadTexture(char const * path);
+void mouseControls(GLFWwindow* window);
 
 //material
 int materialValue = -1;
 
+bool enableMouse = false;
+
 // settings
-const unsigned int SCR_WIDTH = 800;
-const unsigned int SCR_HEIGHT = 600;
+const float multiplier = 1.5;
+const unsigned int SCR_WIDTH = 800 * multiplier;
+const unsigned int SCR_HEIGHT = 600 * multiplier;
 
 // stores how much we're seeing of either texture
 float mixValue = 0.2f;
@@ -57,9 +61,6 @@ int main()
     // glfw: initialize and configure
     // ------------------------------
     glfwInit();
-//    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-//    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-//    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     
     const char* glsl_version = "#version 150";
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -86,7 +87,8 @@ int main()
     glfwSetScrollCallback(window, scroll_callback);
 
     // tell GLFW to capture our mouse
-    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    if(enableMouse)
+        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     
     // glad: load all OpenGL function pointers
     // ---------------------------------------
@@ -97,14 +99,14 @@ int main()
     }
 
     // Setup Dear ImGui context
-//    IMGUI_CHECKVERSION();
-//    ImGui::CreateContext();
-//    ImGuiIO &io = ImGui::GetIO();
-//    // Setup Platform/Renderer bindings
-//    ImGui_ImplGlfw_InitForOpenGL(window, true);
-//    ImGui_ImplOpenGL3_Init(glsl_version);
-//    // Setup Dear ImGui style
-//    ImGui::StyleColorsDark();
+    IMGUI_CHECKVERSION();
+    ImGui::CreateContext();
+    ImGuiIO &io = ImGui::GetIO();
+    // Setup Platform/Renderer bindings
+    ImGui_ImplGlfw_InitForOpenGL(window, true);
+    ImGui_ImplOpenGL3_Init(glsl_version);
+    // Setup Dear ImGui style
+    ImGui::StyleColorsDark();
 
     glEnable(GL_DEPTH_TEST);
     
@@ -112,7 +114,7 @@ int main()
     // ------------------------------------
     Shader lightingShader(textureVertexShaderPath, textureFragmentShaderPath);
     Shader lightCubeShader(lightCubeVertexShaderPath, lightCubeFragmentShaderPath);
-
+    
     // set up vertex data (and buffer(s)) and configure vertex attributes
     // ------------------------------------------------------------------
     float vertices[] = {
@@ -187,6 +189,24 @@ int main()
         glm::vec3( 1.0f, 1.0f, 1.0f)
     };
     
+    float backgroundColor[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
+    
+    //pointLight
+    float pointLightColorValues[4][4] = {
+        { 1.0f,1.0f,1.0f,1.0f },
+        { 1.0f,1.0f,1.0f,1.0f },
+        { 1.0f,1.0f,1.0f,1.0f },
+        { 1.0f,1.0f,1.0f,1.0f }
+    };
+    
+    float pointLightIntensity[4] = { 1.0f, 1.0f, 1.0f, 1.09f };
+    
+    float dirAmbIntensity = 0.05f;
+    float dirDiffIntensity =  0.1f;
+    
+    float spotLightAmbIntensity = 0.2f;
+    float spotLightDiffIntensity =  0.8f;
+    
     unsigned int VBO, cubeVAO;
     glGenVertexArrays(1, &cubeVAO);
     glGenBuffers(1, &VBO);
@@ -232,10 +252,12 @@ int main()
     // -----------
     while (!glfwWindowShouldClose(window))
     {
-//        // feed inputs to dear imgui, start new frame
-//        ImGui_ImplOpenGL3_NewFrame();
-//        ImGui_ImplGlfw_NewFrame();
-//        ImGui::NewFrame();
+        mouseControls(window);
+        
+        // feed inputs to dear imgui, start new frame
+        ImGui_ImplOpenGL3_NewFrame();
+        ImGui_ImplGlfw_NewFrame();
+        ImGui::NewFrame();
         
         updateDeltaTime();
         
@@ -245,7 +267,7 @@ int main()
 
         // render
         // ------
-        glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+        glClearColor(backgroundColor[0], backgroundColor[1], backgroundColor[2], backgroundColor[3]);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // also clear the depth buffer now!
                 
         lightingShader.use();
@@ -254,8 +276,8 @@ int main()
         
         //directional light
         lightingShader.setVec3("dirLight.direction", -0.2f, -1.0f, -0.3f);
-        lightingShader.setVec3("dirLight.ambient", 0.05f, 0.05f, 0.05f);
-        lightingShader.setVec3("dirLight.diffuse", 0.1f, 0.1f, 0.1f);
+        lightingShader.setVec3("dirLight.ambient", dirAmbIntensity, dirAmbIntensity, dirAmbIntensity);
+        lightingShader.setVec3("dirLight.diffuse", dirDiffIntensity, dirDiffIntensity, dirDiffIntensity);
         lightingShader.setVec3("dirLight.specular", 1.0f, 1.0f, 1.0f);
         
         //point lights
@@ -267,8 +289,8 @@ int main()
             lightingShader.setVec3(pointLightIndex + "ambient",  pointLightColors[i] * 0.1f);
             lightingShader.setVec3(pointLightIndex + "diffuse",  pointLightColors[i]);
             lightingShader.setVec3(pointLightIndex + "specular", pointLightColors[i]);
-            lightingShader.setFloat(pointLightIndex + "constant",  1.0f);
-            lightingShader.setFloat(pointLightIndex + "linear",    0.09f);
+            lightingShader.setFloat(pointLightIndex + "constant",  pointLightIntensity[i]);
+            lightingShader.setFloat(pointLightIndex + "linear",    0.9f);
             lightingShader.setFloat(pointLightIndex + "quadratic", 0.032f);
         }
         
@@ -277,12 +299,12 @@ int main()
         lightingShader.setVec3("spotLight.direction",  camera.Front);
         lightingShader.setFloat("spotLight.cutOff",  glm::cos(glm::radians(12.5f)));
         lightingShader.setFloat("spotLight.outerCutOff",    glm::cos(glm::radians(17.5f)));
-        lightingShader.setVec3("spotLight.ambient",  0.2f, 0.2f, 0.2f);
-        lightingShader.setVec3("spotLight.diffuse",  0.8f, 0.8f, 0.8f);
+        lightingShader.setVec3("spotLight.ambient",  spotLightAmbIntensity, spotLightAmbIntensity, spotLightAmbIntensity);
+        lightingShader.setVec3("spotLight.diffuse",  spotLightDiffIntensity, spotLightDiffIntensity, spotLightDiffIntensity);
         lightingShader.setVec3("spotLight.specular", 1.0f, 1.0f, 1.0f);
         lightingShader.setFloat("spotLight.constant",  1.0f);
         lightingShader.setFloat("spotLight.linear",    0.09f);
-        lightingShader.setFloat("spotLight[.quadratic", 0.032f);
+        lightingShader.setFloat("spotLight.quadratic", 0.032f);
                 
         // view/projection transformations
         glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
@@ -329,13 +351,35 @@ int main()
         }
         
         // render your GUI
-//        ImGui::Begin("Demo window");
-//        ImGui::Button("Hello!");
-//        ImGui::End();
+        ImGui::Begin("Controls");
 
-//        // Render dear imgui into screen
-//        ImGui::Render();
-//        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+        //Background Color
+        ImGui::ColorEdit3("Background", backgroundColor);
+        
+        //directional light
+        ImGui::SliderFloat("Dir Ambient", &dirAmbIntensity, 0, 1 );
+        ImGui::SliderFloat("Dir Diffuse", &dirDiffIntensity, 0, 1 );
+        
+        for(int i = 0; i < 4; i++){
+            std::string colorName = "Color ";
+            colorName += std::to_string(i);
+            
+            ImGui::ColorEdit3(colorName.c_str(), pointLightColorValues[i]);
+            pointLightColors[i] = glm::vec3( pointLightColorValues[i][0],  pointLightColorValues[i][1],  pointLightColorValues[i][2]);
+            
+            std::string colorIntensity = colorName + " Intensity";
+            ImGui::SliderFloat(colorIntensity.c_str(), &pointLightIntensity[i], -1, 1);
+        }
+        
+        //flash light
+        ImGui::SliderFloat("SpotLight Ambient", &spotLightAmbIntensity, 0, 1 );
+        ImGui::SliderFloat("SpotLight Diffuse", &spotLightDiffIntensity, 0, 1 );
+        
+        ImGui::End();
+        
+        // Render dear imgui into screen
+        ImGui::Render();
+        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
         
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         // -------------------------------------------------------------------------------
@@ -343,9 +387,9 @@ int main()
         glfwPollEvents();
     }
 
-//    ImGui_ImplOpenGL3_Shutdown();
-//    ImGui_ImplGlfw_Shutdown();
-//    ImGui::DestroyContext();
+    ImGui_ImplOpenGL3_Shutdown();
+    ImGui_ImplGlfw_Shutdown();
+    ImGui::DestroyContext();
     
     // optional: de-allocate all resources once they've outlived their purpose:
     // ------------------------------------------------------------------------
@@ -384,6 +428,12 @@ void processInput(GLFWwindow *window)
         camera.ProcessKeyboard(LEFT, deltaTime);
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
         camera.ProcessKeyboard(RIGHT, deltaTime);
+    
+    //Enable - Disable Mouse curser
+    if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS)
+        enableMouse = false;
+    if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS)
+        enableMouse = true;
     
     //Change material of cube
     for(int i = 0; i < 10; i++){
@@ -431,23 +481,28 @@ void updateDeltaTime(){
 // -------------------------------------------------------
 void mouse_callback(GLFWwindow* window, double xposIn, double yposIn)
 {
-    float xpos = static_cast<float>(xposIn);
-    float ypos = static_cast<float>(yposIn);
-
-    if (firstMouse)
-    {
+    if(enableMouse){
+        float xpos = static_cast<float>(xposIn);
+        float ypos = static_cast<float>(yposIn);
+        
+        if (firstMouse)
+        {
+            lastX = xpos;
+            lastY = ypos;
+            firstMouse = false;
+        }
+        
+        float xoffset = xpos - lastX;
+        float yoffset = lastY - ypos; // reversed since y-coordinates go from bottom to top
+        
         lastX = xpos;
         lastY = ypos;
-        firstMouse = false;
+        
+        camera.ProcessMouseMovement(xoffset, yoffset);
     }
-
-    float xoffset = xpos - lastX;
-    float yoffset = lastY - ypos; // reversed since y-coordinates go from bottom to top
-
-    lastX = xpos;
-    lastY = ypos;
-
-    camera.ProcessMouseMovement(xoffset, yoffset);
+    else{
+        firstMouse = true;
+    }
 }
 
 // glfw: whenever the mouse scroll wheel scrolls, this callback is called
@@ -492,4 +547,13 @@ unsigned int loadTexture(char const * path)
     }
 
     return textureID;
+}
+
+void mouseControls(GLFWwindow* window){
+    if(enableMouse){
+        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    }
+    else{
+        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+    }
 }
