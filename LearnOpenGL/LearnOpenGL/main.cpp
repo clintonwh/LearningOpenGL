@@ -15,8 +15,8 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-
-//#include "UseImGui.hpp"
+#include "UseImGui.hpp"
+#include "LightValues.h"
 
 #include <iostream>
 
@@ -28,6 +28,8 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 unsigned int loadTexture(char const * path);
 void mouseControls(GLFWwindow* window);
+
+LightValues lightValues = LightValues();
 
 //material
 int materialValue = -1;
@@ -55,6 +57,8 @@ float deltaTime = 0.0f; // Time between current frame and last frame
 float lastFrame = 0.0f; // Time of last frame
 
 glm::vec3 lightPos(1.2f, 0.0f, 1.5f);
+
+//UseImGui myImGui;
 
 int main()
 {
@@ -99,6 +103,8 @@ int main()
     }
 
     // Setup Dear ImGui context
+    //myImGui.Init(window, glsl_version);
+
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
     ImGuiIO &io = ImGui::GetIO();
@@ -199,7 +205,7 @@ int main()
         { 1.0f,1.0f,1.0f,1.0f }
     };
     
-    float pointLightIntensity[4] = { 1.0f, 1.0f, 1.0f, 1.09f };
+    float pointLightIntensity[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
     
     float dirAmbIntensity = 0.05f;
     float dirDiffIntensity =  0.1f;
@@ -255,6 +261,7 @@ int main()
         mouseControls(window);
         
         // feed inputs to dear imgui, start new frame
+        //myImGui.NewFrame();
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
@@ -378,6 +385,7 @@ int main()
         ImGui::End();
         
         // Render dear imgui into screen
+        //myImGui.Render();
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
         
@@ -387,6 +395,7 @@ int main()
         glfwPollEvents();
     }
 
+    //myImGui.Shutdown()
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
     ImGui::DestroyContext();

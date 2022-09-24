@@ -46,8 +46,8 @@
             filePath = "LearnOpenGL/main.cpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "517"
-            endingLineNumber = "517"
+            startingLineNumber = "526"
+            endingLineNumber = "526"
             landmarkName = "loadTexture(path)"
             landmarkType = "9">
          </BreakpointContent>

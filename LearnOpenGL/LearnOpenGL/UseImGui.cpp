@@ -1,67 +1,72 @@
-////
-////  UseImGui.cpp
-////  LearnOpenGL
-////
-////  Created by William Clinton on 18/09/2022.
-////
 //
-//#include "UseImGui.hpp"
+//  UseImGui.cpp
+//  LearnOpenGL
 //
-//void UseImGui::Init(GLFWwindow* window, const char* glsl_version) {
-//    IMGUI_CHECKVERSION();
-//    ImGui::CreateContext();
-//    ImGuiIO &io = ImGui::GetIO();
-//    // Setup Platform/Renderer bindings
-//    ImGui_ImplGlfw_InitForOpenGL(window, true);
-//    ImGui_ImplOpenGL3_Init(glsl_version);
-//    ImGui::StyleColorsDark();
-//}
+//  Created by William Clinton on 18/09/2022.
 //
-//void UseImGui::NewFrame() {
-//    // feed inputs to dear imgui, start new frame
-//    ImGui_ImplOpenGL3_NewFrame();
-//    ImGui_ImplGlfw_NewFrame();
-//    ImGui::NewFrame();
-//}
+
+#include "UseImGui.hpp"
+
+
+void UseImGui::Init(GLFWwindow* window, const char* glsl_version) {
+    IMGUI_CHECKVERSION();
+    ImGui::CreateContext();
+    ImGuiIO &io = ImGui::GetIO();
+    // Setup Platform/Renderer bindings
+    ImGui_ImplGlfw_InitForOpenGL(window, true);
+    ImGui_ImplOpenGL3_Init(glsl_version);
+    ImGui::StyleColorsDark();
+}
+
+void UseImGui::NewFrame() {
+    // feed inputs to dear imgui, start new frame
+    ImGui_ImplOpenGL3_NewFrame();
+    ImGui_ImplGlfw_NewFrame();
+    ImGui::NewFrame();
+}
+
+
+void render_Light()
+{
+//    //Background Color
+//    ImGui::ColorEdit3("Background", backgroundColor);
 //
+//    //directional light
+//    ImGui::SliderFloat("Dir Ambient", &dirAmbIntensity, 0, 1 );
+//    ImGui::SliderFloat("Dir Diffuse", &dirDiffIntensity, 0, 1 );
 //
-//// from https://github.com/conan-io/examples/blob/master/libraries/dear-imgui/basic/main.cpp
-//void render_conan_logo()
-//{
-//    ImDrawList *draw_list = ImGui::GetWindowDrawList();
-//    float sz = 300.0f;
-//    static ImVec4 col1 = ImVec4(68.0 / 255.0, 83.0 / 255.0, 89.0 / 255.0, 1.0f);
-//    static ImVec4 col2 = ImVec4(40.0 / 255.0, 60.0 / 255.0, 80.0 / 255.0, 1.0f);
-//    static ImVec4 col3 = ImVec4(50.0 / 255.0, 65.0 / 255.0, 82.0 / 255.0, 1.0f);
-//    static ImVec4 col4 = ImVec4(20.0 / 255.0, 40.0 / 255.0, 60.0 / 255.0, 1.0f);
-//    const ImVec2 p = ImGui::GetCursorScreenPos();
-//    float x = p.x + 4.0f, y = p.y + 4.0f;
-//    draw_list->AddQuadFilled(ImVec2(x, y + 0.25 * sz), ImVec2(x + 0.5 * sz, y + 0.5 * sz), ImVec2(x + sz, y + 0.25 * sz), ImVec2(x + 0.5 * sz, y), ImColor(col1));
-//    draw_list->AddQuadFilled(ImVec2(x, y + 0.25 * sz), ImVec2(x + 0.5 * sz, y + 0.5 * sz), ImVec2(x + 0.5 * sz, y + 1.0 * sz), ImVec2(x, y + 0.75 * sz), ImColor(col2));
-//    draw_list->AddQuadFilled(ImVec2(x + 0.5 * sz, y + 0.5 * sz), ImVec2(x + sz, y + 0.25 * sz), ImVec2(x + sz, y + 0.75 * sz), ImVec2(x + 0.5 * sz, y + 1.0 * sz), ImColor(col3));
-//    draw_list->AddLine(ImVec2(x + 0.75 * sz, y + 0.375 * sz), ImVec2(x + 0.75 * sz, y + 0.875 * sz), ImColor(col4));
-//    draw_list->AddBezierCurve(ImVec2(x + 0.72 * sz, y + 0.24 * sz), ImVec2(x + 0.68 * sz, y + 0.15 * sz), ImVec2(x + 0.48 * sz, y + 0.13 * sz), ImVec2(x + 0.39 * sz, y + 0.17 * sz), ImColor(col4), 10, 18);
-//    draw_list->AddBezierCurve(ImVec2(x + 0.39 * sz, y + 0.17 * sz), ImVec2(x + 0.2 * sz, y + 0.25 * sz), ImVec2(x + 0.3 * sz, y + 0.35 * sz), ImVec2(x + 0.49 * sz, y + 0.38 * sz), ImColor(col4), 10, 18);
-//}
+//    for(int i = 0; i < 4; i++){
+//        std::string colorName = "Color ";
+//        colorName += std::to_string(i);
 //
+//        ImGui::ColorEdit3(colorName.c_str(), pointLightColorValues[i]);
+//        pointLightColors[i] = glm::vec3( pointLightColorValues[i][0],  pointLightColorValues[i][1],  pointLightColorValues[i][2]);
 //
-//void UseImGui::Update() {
-//    ImGui::Begin("Conan Logo");                          // Create a window called "Conan Logo" and append into it.
-//    render_conan_logo();  // draw conan logo if user didn't override update
-//    ImGui::End();
+//        std::string colorIntensity = colorName + " Intensity";
+//        ImGui::SliderFloat(colorIntensity.c_str(), &pointLightIntensity[i], -1, 1);
+//    }
 //
-//
-//}
-//
-//void UseImGui::Render() {
-//    // Render dear imgui into screen
-//    ImGui::Render();
-//    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-//}
-//
-//void UseImGui::Shutdown() {
-//    // Cleanup
-//    ImGui_ImplOpenGL3_Shutdown();
-//    ImGui_ImplGlfw_Shutdown();
-//    ImGui::DestroyContext();
-//}
+//    //flash light
+//    ImGui::SliderFloat("SpotLight Ambient", &spotLightAmbIntensity, 0, 1 );
+//    ImGui::SliderFloat("SpotLight Diffuse", &spotLightDiffIntensity, 0, 1 );
+}
+
+
+void UseImGui::Update() {
+    ImGui::Begin("Controls");
+    render_Light();
+    ImGui::End();
+}
+
+void UseImGui::Render() {
+    // Render dear imgui into screen
+    ImGui::Render();
+    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+}
+
+void UseImGui::Shutdown() {
+    // Cleanup
+    ImGui_ImplOpenGL3_Shutdown();
+    ImGui_ImplGlfw_Shutdown();
+    ImGui::DestroyContext();
+}
