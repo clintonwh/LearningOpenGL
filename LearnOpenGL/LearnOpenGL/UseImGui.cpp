@@ -9,6 +9,9 @@
 #include "UseImGui.hpp"
 #include "iostream"
 
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 void UseImGui::Init(GLFWwindow* window, const char* glsl_version) {
     IMGUI_CHECKVERSION();
@@ -28,7 +31,7 @@ void UseImGui::NewFrame() {
 }
 
 
-void render_Light(LightValues lightValues)
+void render_Light(LightValues& lightValues)
 {
     //Background Color
     float* lightValue = lightValues.GetBackgroundColor();
@@ -36,7 +39,6 @@ void render_Light(LightValues lightValues)
     lightValues.SetBackgroundColor(lightValue);
 
     //directional light
-    
     float lightIntensity = lightValues.GetDirAmbIntensity();
     ImGui::SliderFloat("Dir Ambient", &lightIntensity, 0, 1 );
     lightValues.SetDirAmbIntensity(lightIntensity);
@@ -45,19 +47,26 @@ void render_Light(LightValues lightValues)
     ImGui::SliderFloat("Dir Diffuse", &lightIntensity, 0, 1 );
     lightValues.SetDirDiffIntensity(lightIntensity);
 
-//    for(int i = 0; i < 4; i++){
-//        std::string colorName = "Color ";
-//        colorName += std::to_string(i);
-//
-//        ImGui::ColorEdit3(colorName.c_str(), pointLightColorValues[i]);
-//        pointLightColors[i] = glm::vec3( pointLightColorValues[i][0],  pointLightColorValues[i][1],  pointLightColorValues[i][2]);
-//
-//        std::string colorIntensity = colorName + " Intensity";
-//        ImGui::SliderFloat(colorIntensity.c_str(), &pointLightIntensity[i], -1, 1);
-//    }
+    for(int i = 0; i < 4; i++){
+        std::string colorName = "Color ";
+        colorName += std::to_string(i);
+        
+        float**  pointLights = lightValues.GetPointLightColorValues();
+        float*  pointLightRow = pointLights[i];
+
+        ImGui::ColorEdit3(colorName.c_str(), pointLightRow);
+        
+        lightValues.SetPointLightColorValues(pointLights);
+        
+        float* pointLightIntensity = lightValues.GetPointLightIntensity();
+        
+        std::string colorIntensity = colorName + " Intensity";
+        ImGui::SliderFloat(colorIntensity.c_str(), &pointLightIntensity[i], -1, 1);
+        
+        lightValues.SetPointLightIntensity(pointLightIntensity);
+    }
 
     //flash light
-    
     lightIntensity = lightValues.GetSpotLightAmbIntensity();
     ImGui::SliderFloat("SpotLight Ambient", &lightIntensity, 0, 1 );
     lightValues.SetSpotLightAmbIntensity(lightIntensity);
@@ -67,7 +76,7 @@ void render_Light(LightValues lightValues)
     lightValues.SetSpotLightDiffIntensity(lightIntensity);
 }
 
-void UseImGui::Update(LightValues lightValues) {
+void UseImGui::Update(LightValues& lightValues) {
     ImGui::Begin("Controls");
     render_Light(lightValues);
     ImGui::End();

@@ -18,11 +18,11 @@
 
 class UseImGui {
 public:
-  void Init(GLFWwindow* window, const char* glsl_version);
-  void NewFrame();
-  virtual void Update(LightValues lightValues);
-  void Render();
-  void Shutdown();
+    void Init(GLFWwindow* window, const char* glsl_version);
+    void NewFrame();
+    void Update(LightValues& lightValues);
+    void Render();
+    void Shutdown();
 };
 
 #endif /* UseImGui_hpp */

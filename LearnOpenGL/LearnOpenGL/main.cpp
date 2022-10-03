@@ -29,8 +29,6 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 unsigned int loadTexture(char const * path);
 void mouseControls(GLFWwindow* window);
 
-//LightValues lightValues = LightValues();
-
 //material
 int materialValue = -1;
 
@@ -58,10 +56,11 @@ float lastFrame = 0.0f; // Time of last frame
 
 glm::vec3 lightPos(1.2f, 0.0f, 1.5f);
 
-//UseImGui myImGui;
-
 int main()
 {
+    UseImGui myImGui;
+    LightValues lightValues = LightValues();
+    
     // glfw: initialize and configure
     // ------------------------------
     glfwInit();
@@ -103,16 +102,8 @@ int main()
     }
 
     // Setup Dear ImGui context
-    //myImGui.Init(window, glsl_version);
 
-    IMGUI_CHECKVERSION();
-    ImGui::CreateContext();
-    ImGuiIO &io = ImGui::GetIO();
-    // Setup Platform/Renderer bindings
-    ImGui_ImplGlfw_InitForOpenGL(window, true);
-    ImGui_ImplOpenGL3_Init(glsl_version);
-    // Setup Dear ImGui style
-    ImGui::StyleColorsDark();
+    myImGui.Init(window, glsl_version);
 
     glEnable(GL_DEPTH_TEST);
     
@@ -188,31 +179,6 @@ int main()
         glm::vec3( 0.0f,  0.0f, -3.0f)
     };
     
-    glm::vec3 pointLightColors[] = {
-        glm::vec3( 1.0f, 1.0f, 1.0f),
-        glm::vec3( 1.0f, 1.0f, 1.0f),
-        glm::vec3( 1.0f, 1.0f, 1.0f),
-        glm::vec3( 1.0f, 1.0f, 1.0f)
-    };
-    
-    float backgroundColor[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
-    
-    //pointLight
-    float pointLightColorValues[4][4] = {
-        { 1.0f,1.0f,1.0f,1.0f },
-        { 1.0f,1.0f,1.0f,1.0f },
-        { 1.0f,1.0f,1.0f,1.0f },
-        { 1.0f,1.0f,1.0f,1.0f }
-    };
-    
-    float pointLightIntensity[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
-    
-    float dirAmbIntensity = 0.05f;
-    float dirDiffIntensity =  0.1f;
-    
-    float spotLightAmbIntensity = 0.2f;
-    float spotLightDiffIntensity =  0.8f;
-    
     unsigned int VBO, cubeVAO;
     glGenVertexArrays(1, &cubeVAO);
     glGenBuffers(1, &VBO);
@@ -261,10 +227,7 @@ int main()
         mouseControls(window);
         
         // feed inputs to dear imgui, start new frame
-        //myImGui.NewFrame();
-        ImGui_ImplOpenGL3_NewFrame();
-        ImGui_ImplGlfw_NewFrame();
-        ImGui::NewFrame();
+        myImGui.NewFrame();
         
         updateDeltaTime();
         
@@ -274,7 +237,9 @@ int main()
 
         // render
         // ------
-        glClearColor(backgroundColor[0], backgroundColor[1], backgroundColor[2], backgroundColor[3]);
+        glClearColor(   lightValues.GetBackgroundColor()[0], lightValues.GetBackgroundColor()[1],
+                        lightValues.GetBackgroundColor()[2], lightValues.GetBackgroundColor()[3]);
+        
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // also clear the depth buffer now!
                 
         lightingShader.use();
@@ -283,36 +248,40 @@ int main()
         
         //directional light
         lightingShader.setVec3("dirLight.direction", -0.2f, -1.0f, -0.3f);
-        lightingShader.setVec3("dirLight.ambient", dirAmbIntensity, dirAmbIntensity, dirAmbIntensity);
-        lightingShader.setVec3("dirLight.diffuse", dirDiffIntensity, dirDiffIntensity, dirDiffIntensity);
+        lightingShader.setVec3("dirLight.ambient", lightValues.GetDirAmbIntensity(), lightValues.GetDirAmbIntensity(), lightValues.GetDirAmbIntensity());
+        lightingShader.setVec3("dirLight.diffuse", lightValues.GetDirDiffIntensity(), lightValues.GetDirDiffIntensity(), lightValues.GetDirDiffIntensity());
         lightingShader.setVec3("dirLight.specular", 1.0f, 1.0f, 1.0f);
-        
+
         //point lights
         for(unsigned int i = 0; i < numberOfPointLights; i++)
         {
             std::string pointLightIndex = "pointLights[" + std::to_string( i ) + "].";
-
+            
+            glm::vec3 pointLight = glm::make_vec3(lightValues.GetPointLightColorValues()[i]);
+            //glm::vec3 pointLightIntensity = glm::make_vec3(lightValues.GetPointLightIntensity());
+            
             lightingShader.setVec3(pointLightIndex + "position",  pointLightPositions[i]);
-            lightingShader.setVec3(pointLightIndex + "ambient",  pointLightColors[i] * 0.1f);
-            lightingShader.setVec3(pointLightIndex + "diffuse",  pointLightColors[i]);
-            lightingShader.setVec3(pointLightIndex + "specular", pointLightColors[i]);
-            lightingShader.setFloat(pointLightIndex + "constant",  pointLightIntensity[i]);
+            lightingShader.setVec3(pointLightIndex + "ambient",  pointLight * 0.1f);
+            lightingShader.setVec3(pointLightIndex + "diffuse",  pointLight);
+            lightingShader.setVec3(pointLightIndex + "specular", pointLight);
+            lightingShader.setFloat(pointLightIndex + "constant",  lightValues.GetPointLightIntensity()[i]);
             lightingShader.setFloat(pointLightIndex + "linear",    0.9f);
             lightingShader.setFloat(pointLightIndex + "quadratic", 0.032f);
         }
-        
         // spot light
         lightingShader.setVec3("spotLight.position",  camera.Position);
         lightingShader.setVec3("spotLight.direction",  camera.Front);
         lightingShader.setFloat("spotLight.cutOff",  glm::cos(glm::radians(12.5f)));
         lightingShader.setFloat("spotLight.outerCutOff",    glm::cos(glm::radians(17.5f)));
-        lightingShader.setVec3("spotLight.ambient",  spotLightAmbIntensity, spotLightAmbIntensity, spotLightAmbIntensity);
-        lightingShader.setVec3("spotLight.diffuse",  spotLightDiffIntensity, spotLightDiffIntensity, spotLightDiffIntensity);
+        lightingShader.setVec3("spotLight.ambient", lightValues.GetSpotLightAmbIntensity(), lightValues.GetSpotLightAmbIntensity(),
+                                                    lightValues.GetSpotLightAmbIntensity());
+        lightingShader.setVec3("spotLight.diffuse", lightValues.GetSpotLightDiffIntensity(), lightValues.GetSpotLightDiffIntensity(),
+                                                    lightValues.GetSpotLightDiffIntensity());
         lightingShader.setVec3("spotLight.specular", 1.0f, 1.0f, 1.0f);
         lightingShader.setFloat("spotLight.constant",  1.0f);
         lightingShader.setFloat("spotLight.linear",    0.09f);
         lightingShader.setFloat("spotLight.quadratic", 0.032f);
-                
+        
         // view/projection transformations
         glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
         glm::mat4 view = camera.GetViewMatrix();
@@ -347,58 +316,29 @@ int main()
         
         //render points of light
         glBindVertexArray(lightCubeVAO);
+        
         for(unsigned int i = 0; i < numberOfPointLights; i++)
         {
             glm::mat4 model = glm::mat4(1.0f);
             model = glm::translate(model, pointLightPositions[i]);
             model = glm::scale(model, glm::vec3(0.2f)); // Make it a smaller cube
             lightCubeShader.setMat4("model", model);
-            lightCubeShader.setVec3("lightColor", pointLightColors[i]);
+            glm::vec3 pointLightColors = glm::make_vec3(lightValues.GetPointLightColorValues()[i]);
+            lightCubeShader.setVec3("lightColor", pointLightColors);
             glDrawArrays(GL_TRIANGLES, 0, 36);
         }
         
-        // render your GUI
-        ImGui::Begin("Controls");
-
-        //Background Color
-        ImGui::ColorEdit3("Background", backgroundColor);
-        
-        //directional light
-        ImGui::SliderFloat("Dir Ambient", &dirAmbIntensity, 0, 1 );
-        ImGui::SliderFloat("Dir Diffuse", &dirDiffIntensity, 0, 1 );
-        
-        for(int i = 0; i < 4; i++){
-            std::string colorName = "Color ";
-            colorName += std::to_string(i);
-            
-            ImGui::ColorEdit3(colorName.c_str(), pointLightColorValues[i]);
-            pointLightColors[i] = glm::vec3( pointLightColorValues[i][0],  pointLightColorValues[i][1],  pointLightColorValues[i][2]);
-            
-            std::string colorIntensity = colorName + " Intensity";
-            ImGui::SliderFloat(colorIntensity.c_str(), &pointLightIntensity[i], -1, 1);
-        }
-        
-        //flash light
-        ImGui::SliderFloat("SpotLight Ambient", &spotLightAmbIntensity, 0, 1 );
-        ImGui::SliderFloat("SpotLight Diffuse", &spotLightDiffIntensity, 0, 1 );
-        
-        ImGui::End();
-        
+        myImGui.Update(lightValues);
         // Render dear imgui into screen
-        //myImGui.Render();
-        ImGui::Render();
-        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-        
+        myImGui.Render();
+       
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         // -------------------------------------------------------------------------------
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
 
-    //myImGui.Shutdown()
-    ImGui_ImplOpenGL3_Shutdown();
-    ImGui_ImplGlfw_Shutdown();
-    ImGui::DestroyContext();
+    myImGui.Shutdown();
     
     // optional: de-allocate all resources once they've outlived their purpose:
     // ------------------------------------------------------------------------
