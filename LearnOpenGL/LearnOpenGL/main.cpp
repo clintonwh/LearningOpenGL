@@ -18,6 +18,8 @@
 #include "UseImGui.hpp"
 #include "LightValues.h"
 
+#include "mesh.h"
+
 #include <iostream>
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
