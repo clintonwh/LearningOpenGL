@@ -5,20 +5,18 @@
 #include <imgui/imgui_impl_glfw.h>
 #include <imgui/imgui_impl_opengl3.h>
 
-#define STB_IMAGE_IMPLEMENTATION
-#include <stb_image.h>
-#include <shader_m.h>
-#include <camera.h>
+#include <learning/shader_m.h>
+#include <learning/camera.h>
 #include <constants.h>
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#include "UseImGui.hpp"
-#include "LightValues.h"
+#include "practice/UseImGui.hpp"
+#include "practice/LightValues.h"
 
-#include "mesh.h"
+#include "learning/model.h"
 
 #include <iostream>
 
@@ -28,23 +26,15 @@ glm::mat4 generateModelMatrix(), generateViewMatrix(), generateProjectionMatrix(
 void updateDeltaTime();
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
-unsigned int loadTexture(char const * path);
 void mouseControls(GLFWwindow* window);
 
-//material
-int materialValue = -1;
-
 bool enableMouse = false;
+bool enableImGui = true;
 
 // settings
 const float multiplier = 1.5;
 const unsigned int SCR_WIDTH = 800 * multiplier;
 const unsigned int SCR_HEIGHT = 600 * multiplier;
-
-// stores how much we're seeing of either texture
-float mixValue = 0.2f;
-
-glm::mat4 scaledObjectLoc = glm::mat4(1.0f);
 
 // camera
 Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
@@ -61,21 +51,18 @@ glm::vec3 lightPos(1.2f, 0.0f, 1.5f);
 int main()
 {
     UseImGui myImGui;
-    LightValues lightValues = LightValues();
     
     // glfw: initialize and configure
     // ------------------------------
     glfwInit();
-    
     const char* glsl_version = "#version 150";
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);  // 3.2+ only
-    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);            // Required on Mac
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-#ifdef __APPLE__
-    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-#endif
+    #ifdef __APPLE__
+        glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+    #endif
 
     // glfw window creation
     // --------------------
@@ -103,250 +90,74 @@ int main()
         return -1;
     }
 
+    // tell stb_image.h to flip loaded texture's on the y-axis (before loading model).
+    stbi_set_flip_vertically_on_load(true);
+    
     // Setup Dear ImGui context
-
-    myImGui.Init(window, glsl_version);
+    if(enableImGui)
+        myImGui.Init(window, glsl_version);
 
     glEnable(GL_DEPTH_TEST);
-    
-    // build and compile our shader zprogram
-    // ------------------------------------
-    Shader lightingShader(textureVertexShaderPath, textureFragmentShaderPath);
-    Shader lightCubeShader(lightCubeVertexShaderPath, lightCubeFragmentShaderPath);
-    
-    // set up vertex data (and buffer(s)) and configure vertex attributes
-    // ------------------------------------------------------------------
-    float vertices[] = {
-        // positions          // normals           // texture coords
-        -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f, 0.0f,
-         0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f, 0.0f,
-         0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f, 1.0f,
-         0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f, 1.0f,
-        -0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f, 1.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f, 0.0f,
-
-        -0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f,   0.0f, 0.0f,
-         0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f,   1.0f, 0.0f,
-         0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,   1.0f, 1.0f,
-         0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,   1.0f, 1.0f,
-        -0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,   0.0f, 1.0f,
-        -0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f,   0.0f, 0.0f,
-
-        -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  1.0f, 0.0f,
-        -0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  1.0f, 1.0f,
-        -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  0.0f, 1.0f,
-        -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  0.0f, 1.0f,
-        -0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  0.0f, 0.0f,
-        -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  1.0f, 0.0f,
-
-         0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  1.0f, 0.0f,
-         0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  1.0f, 1.0f,
-         0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  0.0f, 1.0f,
-         0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  0.0f, 1.0f,
-         0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  0.0f, 0.0f,
-         0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  1.0f, 0.0f,
-
-        -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  0.0f, 1.0f,
-         0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  1.0f, 1.0f,
-         0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  1.0f, 0.0f,
-         0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  1.0f, 0.0f,
-        -0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  0.0f, 0.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  0.0f, 1.0f,
-
-        -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f, 1.0f,
-         0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  1.0f, 1.0f,
-         0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  1.0f, 0.0f,
-         0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  1.0f, 0.0f,
-        -0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  0.0f, 0.0f,
-        -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f, 1.0f
-    };
-    
-    glm::vec3 cubePositions[] = {
-        glm::vec3( 0.0f,  0.0f,  0.0f),
-        glm::vec3( 2.0f,  5.0f, -15.0f),
-        glm::vec3(-1.5f, -2.2f, -2.5f),
-        glm::vec3(-3.8f, -2.0f, -12.3f),
-        glm::vec3( 2.4f, -0.4f, -3.5f),
-        glm::vec3(-1.7f,  3.0f, -7.5f),
-        glm::vec3( 1.3f, -2.0f, -2.5f),
-        glm::vec3( 1.5f,  2.0f, -2.5f),
-        glm::vec3( 1.5f,  0.2f, -1.5f),
-        glm::vec3(-1.3f,  1.0f, -1.5f)
-    };
         
-    glm::vec3 pointLightPositions[] = {
-        glm::vec3( 0.7f,  0.2f,  2.0f),
-        glm::vec3( 2.3f, -3.3f, -4.0f),
-        glm::vec3(-4.0f,  2.0f, -12.0f),
-        glm::vec3( 0.0f,  0.0f, -3.0f)
-    };
-    
-    unsigned int VBO, cubeVAO;
-    glGenVertexArrays(1, &cubeVAO);
-    glGenBuffers(1, &VBO);
-    
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-    glBindVertexArray(cubeVAO);
-    
-    // position attribute
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(0);
-    // normal attribute
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
-    glEnableVertexAttribArray(1);
-    // texcoord attribute
-    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
-    glEnableVertexAttribArray(2);
+    // build and compile shaders
+    // -------------------------
+    Shader ourShader(basicVertexShaderPath, basicFragmentShaderPath);
 
-    unsigned int lightCubeVAO;
-    glGenVertexArrays(1, &lightCubeVAO);
-    glBindVertexArray(lightCubeVAO);
-    // we only need to bind to the VBO, the container's VBO's data already contains the data.
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    // set the vertex attribute
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(0);
-
-    // load textures (we now use a utility function to keep the code more organized)
-    // -----------------------------------------------------------------------------
-    unsigned int diffuseMap = loadTexture(crateTexturePath);
-    unsigned int specularMap = loadTexture(crateSpecularTexturePath);
-
-    // shader configuration
-    // --------------------
-    lightingShader.use();
-    lightingShader.setInt("material.diffuse", 0);
-    lightingShader.setInt("material.specular", 1);
+    // load models
+    // -----------
+    string const modelPath = backpackObjectPath;
+    Model ourModel(modelPath);
     
-    unsigned int numberOfCubes = sizeof(cubePositions)/sizeof(cubePositions[0]);
-    unsigned int numberOfPointLights = sizeof(pointLightPositions)/sizeof(pointLightPositions[0]);
-        
-// render loop
+    // render loop
     // -----------
     while (!glfwWindowShouldClose(window))
     {
-        mouseControls(window);
-        
-        // feed inputs to dear imgui, start new frame
-        myImGui.NewFrame();
-        
-        updateDeltaTime();
-        
+        // per-frame time logic
+        // --------------------
+        float currentFrame = static_cast<float>(glfwGetTime());
+        deltaTime = currentFrame - lastFrame;
+        lastFrame = currentFrame;
+
         // input
         // -----
         processInput(window);
 
         // render
         // ------
-        glClearColor(   lightValues.GetBackgroundColor()[0], lightValues.GetBackgroundColor()[1],
-                        lightValues.GetBackgroundColor()[2], lightValues.GetBackgroundColor()[3]);
-        
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // also clear the depth buffer now!
-                
-        lightingShader.use();
-        lightingShader.setVec3("viewPos", camera.Position);
-        lightingShader.setFloat("material.shininess", 32.0f);
-        
-        //directional light
-        lightingShader.setVec3("dirLight.direction", -0.2f, -1.0f, -0.3f);
-        lightingShader.setVec3("dirLight.ambient", lightValues.GetDirAmbIntensity(), lightValues.GetDirAmbIntensity(), lightValues.GetDirAmbIntensity());
-        lightingShader.setVec3("dirLight.diffuse", lightValues.GetDirDiffIntensity(), lightValues.GetDirDiffIntensity(), lightValues.GetDirDiffIntensity());
-        lightingShader.setVec3("dirLight.specular", 1.0f, 1.0f, 1.0f);
+        glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        //point lights
-        for(unsigned int i = 0; i < numberOfPointLights; i++)
-        {
-            std::string pointLightIndex = "pointLights[" + std::to_string( i ) + "].";
-            
-            glm::vec3 pointLight = glm::make_vec3(lightValues.GetPointLightColorValues()[i]);
-            //glm::vec3 pointLightIntensity = glm::make_vec3(lightValues.GetPointLightIntensity());
-            
-            lightingShader.setVec3(pointLightIndex + "position",  pointLightPositions[i]);
-            lightingShader.setVec3(pointLightIndex + "ambient",  pointLight * 0.1f);
-            lightingShader.setVec3(pointLightIndex + "diffuse",  pointLight);
-            lightingShader.setVec3(pointLightIndex + "specular", pointLight);
-            lightingShader.setFloat(pointLightIndex + "constant",  lightValues.GetPointLightIntensity()[i]);
-            lightingShader.setFloat(pointLightIndex + "linear",    0.9f);
-            lightingShader.setFloat(pointLightIndex + "quadratic", 0.032f);
-        }
-        // spot light
-        lightingShader.setVec3("spotLight.position",  camera.Position);
-        lightingShader.setVec3("spotLight.direction",  camera.Front);
-        lightingShader.setFloat("spotLight.cutOff",  glm::cos(glm::radians(12.5f)));
-        lightingShader.setFloat("spotLight.outerCutOff",    glm::cos(glm::radians(17.5f)));
-        lightingShader.setVec3("spotLight.ambient", lightValues.GetSpotLightAmbIntensity(), lightValues.GetSpotLightAmbIntensity(),
-                                                    lightValues.GetSpotLightAmbIntensity());
-        lightingShader.setVec3("spotLight.diffuse", lightValues.GetSpotLightDiffIntensity(), lightValues.GetSpotLightDiffIntensity(),
-                                                    lightValues.GetSpotLightDiffIntensity());
-        lightingShader.setVec3("spotLight.specular", 1.0f, 1.0f, 1.0f);
-        lightingShader.setFloat("spotLight.constant",  1.0f);
-        lightingShader.setFloat("spotLight.linear",    0.09f);
-        lightingShader.setFloat("spotLight.quadratic", 0.032f);
-        
+        // don't forget to enable shader before setting uniforms
+        ourShader.use();
+
         // view/projection transformations
         glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
         glm::mat4 view = camera.GetViewMatrix();
-        lightingShader.setMat4("projection", projection);
-        lightingShader.setMat4("view", view);
+        ourShader.setMat4("projection", projection);
+        ourShader.setMat4("view", view);
 
-        // bind diffuse map
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, diffuseMap);
-        
-        // bind specular map
-        glActiveTexture(GL_TEXTURE1);
-        glBindTexture(GL_TEXTURE_2D, specularMap);
-        
-        //render containers
-        glBindVertexArray(cubeVAO);
-        for(unsigned int i = 0; i < numberOfCubes; i++)
-        {
-            glm::mat4 model = glm::mat4(1.0f);
-            model = glm::translate(model, cubePositions[i]);
-            float angle = 20.0f * i;
-            model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
-            lightingShader.setMat4("model", model);
+        // render the loaded model
+        glm::mat4 model = glm::mat4(1.0f);
+        model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f)); // translate it down so it's at the center of the scene
+        model = glm::scale(model, glm::vec3(0.5f, 0.5f, 0.5f));    // it's a bit too big for our scene, so scale it down
+        ourShader.setMat4("model", model);
+        ourModel.Draw(ourShader);
 
-            glDrawArrays(GL_TRIANGLES, 0, 36);
+        if(enableImGui){
+            myImGui.NewFrame();
+            myImGui.Update();
+            myImGui.Render();
         }
-        
-        // also draw the lamp object(s)
-         lightCubeShader.use();
-         lightCubeShader.setMat4("projection", projection);
-         lightCubeShader.setMat4("view", view);
-        
-        //render points of light
-        glBindVertexArray(lightCubeVAO);
-        
-        for(unsigned int i = 0; i < numberOfPointLights; i++)
-        {
-            glm::mat4 model = glm::mat4(1.0f);
-            model = glm::translate(model, pointLightPositions[i]);
-            model = glm::scale(model, glm::vec3(0.2f)); // Make it a smaller cube
-            lightCubeShader.setMat4("model", model);
-            glm::vec3 pointLightColors = glm::make_vec3(lightValues.GetPointLightColorValues()[i]);
-            lightCubeShader.setVec3("lightColor", pointLightColors);
-            glDrawArrays(GL_TRIANGLES, 0, 36);
-        }
-        
-        myImGui.Update(lightValues);
-        // Render dear imgui into screen
-        myImGui.Render();
-       
+            
+
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         // -------------------------------------------------------------------------------
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
 
-    myImGui.Shutdown();
-    
-    // optional: de-allocate all resources once they've outlived their purpose:
-    // ------------------------------------------------------------------------
-    glDeleteVertexArrays(1, &cubeVAO);
-    glDeleteVertexArrays(1, &lightCubeVAO);
-    glDeleteBuffers(1, &VBO);
+    if(enableImGui)
+        myImGui.Shutdown();
 
     // glfw: terminate, clearing all previously allocated GLFW resources.
     // ------------------------------------------------------------------
@@ -361,15 +172,6 @@ void processInput(GLFWwindow *window)
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
     
-    //MixRatioControls
-    if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
-        mixValue += 0.003f; // change this value accordingly (might be too slow or too fast based on system hardware)
-        if(mixValue >= 1.0f)
-            mixValue = 1.0f;
-    if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
-        mixValue -= 0.003f; // change this value accordingly (might be too slow or too fast based on system hardware)
-        if (mixValue <= 0.0f)
-            mixValue = 0.0f;
     //MovingControls
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
         camera.ProcessKeyboard(FORWARD, deltaTime);
@@ -385,12 +187,6 @@ void processInput(GLFWwindow *window)
         enableMouse = false;
     if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS)
         enableMouse = true;
-    
-    //Change material of cube
-    for(int i = 0; i < 10; i++){
-        if(glfwGetKey(window, GLFW_KEY_0+i) == GLFW_PRESS)
-            materialValue = i;
-    }
 }
 
 // glfw: whenever the window size changed (by OS or user resize) this callback function executes
@@ -461,43 +257,6 @@ void mouse_callback(GLFWwindow* window, double xposIn, double yposIn)
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 {
     camera.ProcessMouseScroll(static_cast<float>(yoffset));
-}
-
-unsigned int loadTexture(char const * path)
-{
-    unsigned int textureID;
-    glGenTextures(1, &textureID);
-
-    int width, height, nrComponents;
-    unsigned char *data = stbi_load(path, &width, &height, &nrComponents, 0);
-    if (data)
-    {
-        GLenum format = GL_RGB;
-        if (nrComponents == 1)
-            format = GL_RED;
-        else if (nrComponents == 3)
-            format = GL_RGB;
-        else if (nrComponents == 4)
-            format = GL_RGBA;
-
-        glBindTexture(GL_TEXTURE_2D, textureID);
-        glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
-        glGenerateMipmap(GL_TEXTURE_2D);
-
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-        stbi_image_free(data);
-    }
-    else
-    {
-        std::cout << "Texture failed to load at path: " << path << std::endl;
-        stbi_image_free(data);
-    }
-
-    return textureID;
 }
 
 void mouseControls(GLFWwindow* window){

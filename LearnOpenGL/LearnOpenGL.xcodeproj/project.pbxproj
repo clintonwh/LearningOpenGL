@@ -14,6 +14,7 @@
 		6008AF6628DEFFD900CB544D /* imgui_tables.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6008AF5728DEFFD800CB544D /* imgui_tables.cpp */; };
 		6008AF6728DEFFD900CB544D /* imgui_draw.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6008AF5A28DEFFD800CB544D /* imgui_draw.cpp */; };
 		6008AF6A28DF04A700CB544D /* LightValues.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6008AF6828DF04A700CB544D /* LightValues.cpp */; };
+		603E589528F3FFCD008E979E /* libassimp.5.2.4.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 603E589428F3FFCD008E979E /* libassimp.5.2.4.dylib */; };
 		60DE22B1284DD83000942C33 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 60DE22B0284DD83000942C33 /* main.cpp */; };
 		60DE22BB284DDA8100942C33 /* libglfw3.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 60DE22BA284DDA8100942C33 /* libglfw3.a */; };
 		60DE22C0284DDB5300942C33 /* glad.c in Sources */ = {isa = PBXBuildFile; fileRef = 60DE22BF284DDB5300942C33 /* glad.c */; };
@@ -55,12 +56,15 @@
 		6008AF6828DF04A700CB544D /* LightValues.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = LightValues.cpp; sourceTree = "<group>"; };
 		6008AF6928DF04A700CB544D /* LightValues.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LightValues.h; sourceTree = "<group>"; };
 		600A6234289F8DE100F770FD /* camera.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = camera.h; sourceTree = "<group>"; };
-		600A6235289FAB3700F770FD /* basicTexture.fs */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = basicTexture.fs; sourceTree = "<group>"; };
-		600A6236289FAB8A00F770FD /* basicTexture.vs */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = basicTexture.vs; sourceTree = "<group>"; };
 		600A6237289FAC0E00F770FD /* basicLight.vs */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = basicLight.vs; sourceTree = "<group>"; };
 		600A6238289FAC0E00F770FD /* basicLight.fs */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = basicLight.fs; sourceTree = "<group>"; };
 		600A6239289FB07700F770FD /* lightCube.fs */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = lightCube.fs; sourceTree = "<group>"; };
 		600A623A289FB07700F770FD /* lightCube.vs */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = lightCube.vs; sourceTree = "<group>"; };
+		603E589328F3F398008E979E /* model.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = model.h; sourceTree = "<group>"; };
+		603E589428F3FFCD008E979E /* libassimp.5.2.4.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libassimp.5.2.4.dylib; path = ../../../../usr/local/Cellar/assimp/5.2.5/lib/libassimp.5.2.4.dylib; sourceTree = "<group>"; };
+		603E589628F408D2008E979E /* shader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = shader.h; sourceTree = "<group>"; };
+		603E589F28F41765008E979E /* multipleLightsTexture.fs */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = multipleLightsTexture.fs; sourceTree = "<group>"; };
+		603E58A028F41765008E979E /* multipleLightsTexture.vs */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = multipleLightsTexture.vs; sourceTree = "<group>"; };
 		6043774328B0C00C00634484 /* crateSpecularColour.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = crateSpecularColour.png; sourceTree = "<group>"; };
 		6043774428B0C3D200634484 /* crateEmissionMap.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = crateEmissionMap.jpeg; sourceTree = "<group>"; };
 		607D8F9928EAF5B000126AF1 /* mesh.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = mesh.h; sourceTree = "<group>"; };
@@ -96,6 +100,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				603E589528F3FFCD008E979E /* libassimp.5.2.4.dylib in Frameworks */,
 				60DE22CB284DDCAA00942C33 /* CoreGraphics.framework in Frameworks */,
 				60DE22C9284DDC9E00942C33 /* Foundation.framework in Frameworks */,
 				60DE22C7284DDC9200942C33 /* CoreFoundation.framework in Frameworks */,
@@ -129,15 +134,39 @@
 			path = imgui;
 			sourceTree = "<group>";
 		};
+		603E589A28F40FAC008E979E /* learning */ = {
+			isa = PBXGroup;
+			children = (
+				607D8F9928EAF5B000126AF1 /* mesh.h */,
+				603E589328F3F398008E979E /* model.h */,
+				600A6234289F8DE100F770FD /* camera.h */,
+				60B88DBF288C0DAF00FBDCB9 /* shader_m.h */,
+				603E589628F408D2008E979E /* shader.h */,
+				60A9683A2882873C00889B11 /* shader_s.h */,
+			);
+			path = learning;
+			sourceTree = "<group>";
+		};
+		603E589C28F41062008E979E /* practice */ = {
+			isa = PBXGroup;
+			children = (
+				60E6F1D528D6D47A009252A3 /* UseImGui.cpp */,
+				60E6F1D628D6D47A009252A3 /* UseImGui.hpp */,
+				6008AF6828DF04A700CB544D /* LightValues.cpp */,
+				6008AF6928DF04A700CB544D /* LightValues.h */,
+			);
+			path = practice;
+			sourceTree = "<group>";
+		};
 		60A9683B2882884F00889B11 /* Shaders */ = {
 			isa = PBXGroup;
 			children = (
+				603E589F28F41765008E979E /* multipleLightsTexture.fs */,
+				603E58A028F41765008E979E /* multipleLightsTexture.vs */,
 				600A6239289FB07700F770FD /* lightCube.fs */,
 				600A623A289FB07700F770FD /* lightCube.vs */,
 				600A6238289FAC0E00F770FD /* basicLight.fs */,
 				600A6237289FAC0E00F770FD /* basicLight.vs */,
-				600A6236289FAB8A00F770FD /* basicTexture.vs */,
-				600A6235289FAB3700F770FD /* basicTexture.fs */,
 			);
 			path = Shaders;
 			sourceTree = "<group>";
@@ -179,17 +208,9 @@
 		60DE22AF284DD83000942C33 /* LearnOpenGL */ = {
 			isa = PBXGroup;
 			children = (
-				60A9684A2882A17D00889B11 /* stb_image.h */,
+				603E589C28F41062008E979E /* practice */,
 				60DE22B0284DD83000942C33 /* main.cpp */,
-				60A9683A2882873C00889B11 /* shader_s.h */,
 				60A9684B2882A68E00889B11 /* constants.h */,
-				60B88DBF288C0DAF00FBDCB9 /* shader_m.h */,
-				600A6234289F8DE100F770FD /* camera.h */,
-				60E6F1D528D6D47A009252A3 /* UseImGui.cpp */,
-				60E6F1D628D6D47A009252A3 /* UseImGui.hpp */,
-				6008AF6828DF04A700CB544D /* LightValues.cpp */,
-				6008AF6928DF04A700CB544D /* LightValues.h */,
-				607D8F9928EAF5B000126AF1 /* mesh.h */,
 			);
 			path = LearnOpenGL;
 			sourceTree = "<group>";
@@ -207,6 +228,8 @@
 		60DE22B8284DD90900942C33 /* Include */ = {
 			isa = PBXGroup;
 			children = (
+				603E589A28F40FAC008E979E /* learning */,
+				60A9684A2882A17D00889B11 /* stb_image.h */,
 				6008AF5328DEFFC400CB544D /* imgui */,
 				60DE22BE284DDB1400942C33 /* KHR */,
 				60DE22BD284DDB0A00942C33 /* glad */,
@@ -227,6 +250,7 @@
 		60DE22C1284DDC6D00942C33 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				603E589428F3FFCD008E979E /* libassimp.5.2.4.dylib */,
 				60A968472882A0C400889B11 /* stb_image */,
 				60DE22CA284DDCAA00942C33 /* CoreGraphics.framework */,
 				60DE22C8284DDC9E00942C33 /* Foundation.framework */,
@@ -427,8 +451,12 @@
 					"$(PROJECT_DIR)/Externals/Include",
 					"$(PROJECT_DIR)/LearnOpenGL",
 					"$(PROJECT_DIR)/Externals/Include/imgui",
+					/usr/local/include,
 				);
-				LIBRARY_SEARCH_PATHS = "$(PROJECT_DIR)/Externals/Libraries";
+				LIBRARY_SEARCH_PATHS = (
+					"$(PROJECT_DIR)/Externals/Libraries",
+					/usr/local/Cellar/assimp/5.2.5/lib/,
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -441,8 +469,12 @@
 					"$(PROJECT_DIR)/Externals/Include",
 					"$(PROJECT_DIR)/LearnOpenGL",
 					"$(PROJECT_DIR)/Externals/Include/imgui",
+					/usr/local/include,
 				);
-				LIBRARY_SEARCH_PATHS = "$(PROJECT_DIR)/Externals/Libraries";
+				LIBRARY_SEARCH_PATHS = (
+					"$(PROJECT_DIR)/Externals/Libraries",
+					/usr/local/Cellar/assimp/5.2.5/lib/,
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;

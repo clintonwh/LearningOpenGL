@@ -16,8 +16,8 @@ const char* textureVertexShaderPath = "/Users/williamclinton/Xcode/LearnOpenGL/S
 const char* textureFragmentShaderPath = "/Users/williamclinton/Xcode/LearnOpenGL/Shaders/basicTexture.fs";
 
 //Lighting
-const char* lightVertexShaderPath = "/Users/williamclinton/Xcode/LearnOpenGL/Shaders/basicLight.vs";
-const char* lightFragmentShaderPath = "/Users/williamclinton/Xcode/LearnOpenGL/Shaders/basicLight.fs";
+const char* basicVertexShaderPath = "/Users/williamclinton/Xcode/LearnOpenGL/Shaders/basicLight.vs";
+const char* basicFragmentShaderPath = "/Users/williamclinton/Xcode/LearnOpenGL/Shaders/basicLight.fs";
 
 //LightCube
 const char* lightCubeVertexShaderPath = "/Users/williamclinton/Xcode/LearnOpenGL/Shaders/lightCube.vs";
@@ -34,6 +34,8 @@ const char* crateEmissionTexturePath = "/Users/williamclinton/Xcode/LearnOpenGL/
 const char* crateSpecularGreyScaleTexturePath = "/Users/williamclinton/Xcode/LearnOpenGL/Textures/crateGreyScale.png";
 const char* crateSpecularGreyScaleDarkTexturePath = "/Users/williamclinton/Xcode/LearnOpenGL/Textures/crateGreyScaleDark.png";
 
+std::string const backpackObjectPath = "/Users/williamclinton/Xcode/LearnOpenGL/Objects/backpack/backpack.obj";
+std::string const pokeBallObjectPath = "/Users/williamclinton/Xcode/LearnOpenGL/Objects/Pokeball/Pokeball.obj";
 
 
 #endif /* constants_h */
