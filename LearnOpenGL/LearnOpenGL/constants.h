@@ -35,7 +35,9 @@ const char* crateSpecularGreyScaleTexturePath = "/Users/williamclinton/Xcode/Lea
 const char* crateSpecularGreyScaleDarkTexturePath = "/Users/williamclinton/Xcode/LearnOpenGL/Textures/crateGreyScaleDark.png";
 
 std::string const backpackObjectPath = "/Users/williamclinton/Xcode/LearnOpenGL/Objects/backpack/backpack.obj";
-std::string const pokeBallObjectPath = "/Users/williamclinton/Xcode/LearnOpenGL/Objects/Pokeball/Pokeball.obj";
+std::string const carObjectPath = "/Users/williamclinton/Xcode/LearnOpenGL/Objects/mercedes/mercedes.obj";
+std::string const teapotObjectPath = "/Users/williamclinton/Xcode/LearnOpenGL/Objects/teapot.fbx";
+std::string const oldTeapotObjectPath = "/Users/williamclinton/Xcode/LearnOpenGL/Objects/OldTeapot/OldTeapot.obj";
 
 
 #endif /* constants_h */

@@ -82,9 +82,15 @@ void UseImGui::Update(LightValues& lightValues) {
     ImGui::End();
 }
 
-void UseImGui::Update() {
+void UseImGui::Update(bool &rotate, bool &restart) {
     ImGui::Begin("Controls");
-    ImGui::Button("Hello!");
+    
+    //if(!rotate)
+    ImGui::Checkbox("Rotate", &rotate);
+    ImGui::Checkbox("Restart Rotation", &restart);
+
+    //ImGui::ShowDemoWindow();
+    
     ImGui::End();
 }
 

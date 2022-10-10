@@ -21,7 +21,7 @@ public:
     void Init(GLFWwindow* window, const char* glsl_version);
     void NewFrame();
     void Update(LightValues& lightValues);
-    void Update();
+    void Update(bool &rotate, bool &restart);
     void Render();
     void Shutdown();
 };

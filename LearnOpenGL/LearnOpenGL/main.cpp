@@ -30,6 +30,8 @@ void mouseControls(GLFWwindow* window);
 
 bool enableMouse = false;
 bool enableImGui = true;
+bool rotateObject = false;
+bool restartRoatation = false;
 
 // settings
 const float multiplier = 1.5;
@@ -37,7 +39,7 @@ const unsigned int SCR_WIDTH = 800 * multiplier;
 const unsigned int SCR_HEIGHT = 600 * multiplier;
 
 // camera
-Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
+Camera camera(glm::vec3(0.0f, 0.0f, 5.0f));
 float lastX = SCR_WIDTH / 2.0f;
 float lastY = SCR_HEIGHT / 2.0f;
 bool firstMouse = true;
@@ -45,6 +47,8 @@ bool firstMouse = true;
 //deltatime setup variable
 float deltaTime = 0.0f; // Time between current frame and last frame
 float lastFrame = 0.0f; // Time of last frame
+
+float rotation;
 
 glm::vec3 lightPos(1.2f, 0.0f, 1.5f);
 
@@ -105,13 +109,17 @@ int main()
 
     // load models
     // -----------
-    string const modelPath = backpackObjectPath;
-    Model ourModel(modelPath);
+    Model ourModel(backpackObjectPath);
     
     // render loop
     // -----------
     while (!glfwWindowShouldClose(window))
     {
+        if(restartRoatation){
+            rotation = glm::radians(0.0f);
+            restartRoatation = false;
+        }
+            
         // per-frame time logic
         // --------------------
         float currentFrame = static_cast<float>(glfwGetTime());
@@ -124,7 +132,8 @@ int main()
 
         // render
         // ------
-        glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
+        //glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
+        glClearColor(0.95f, 0.95f, 0.95f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         // don't forget to enable shader before setting uniforms
@@ -139,13 +148,23 @@ int main()
         // render the loaded model
         glm::mat4 model = glm::mat4(1.0f);
         model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f)); // translate it down so it's at the center of the scene
+        
+        if(rotateObject){
+            rotation += glm::radians(1.0f);
+            //rotation = (float)glfwGetTime();
+            //model = glm::rotate(model, (float)glfwGetTime(), glm::vec3(0.0f, 1.0f, 0.0f));
+        }
+
+        model = glm::rotate(model, rotation, glm::vec3(0.0f, 1.0f, 0.0f));
+            
         model = glm::scale(model, glm::vec3(0.5f, 0.5f, 0.5f));    // it's a bit too big for our scene, so scale it down
         ourShader.setMat4("model", model);
         ourModel.Draw(ourShader);
 
         if(enableImGui){
             myImGui.NewFrame();
-            myImGui.Update();
+            myImGui.Update(rotateObject, restartRoatation);
+            //myImGui.Update();
             myImGui.Render();
         }
             
