@@ -67,6 +67,10 @@
 		603E58A028F41765008E979E /* multipleLightsTexture.vs */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = multipleLightsTexture.vs; sourceTree = "<group>"; };
 		6043774328B0C00C00634484 /* crateSpecularColour.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = crateSpecularColour.png; sourceTree = "<group>"; };
 		6043774428B0C3D200634484 /* crateEmissionMap.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = crateEmissionMap.jpeg; sourceTree = "<group>"; };
+		6052E98629052E3F00F6BBFA /* metal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = metal.png; sourceTree = "<group>"; };
+		6052E98729052E4000F6BBFA /* marble.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = marble.jpeg; sourceTree = "<group>"; };
+		6052E98829052F7C00F6BBFA /* depthTesting.vs */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = depthTesting.vs; sourceTree = "<group>"; };
+		6052E98929052F7C00F6BBFA /* depthTesting.fs */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = depthTesting.fs; sourceTree = "<group>"; };
 		607D8F9928EAF5B000126AF1 /* mesh.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = mesh.h; sourceTree = "<group>"; };
 		60A9683A2882873C00889B11 /* shader_s.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = shader_s.h; sourceTree = "<group>"; };
 		60A9684228829AF600889B11 /* wall.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = wall.jpeg; sourceTree = "<group>"; };
@@ -161,6 +165,8 @@
 		60A9683B2882884F00889B11 /* Shaders */ = {
 			isa = PBXGroup;
 			children = (
+				6052E98929052F7C00F6BBFA /* depthTesting.fs */,
+				6052E98829052F7C00F6BBFA /* depthTesting.vs */,
 				603E589F28F41765008E979E /* multipleLightsTexture.fs */,
 				603E58A028F41765008E979E /* multipleLightsTexture.vs */,
 				600A6239289FB07700F770FD /* lightCube.fs */,
@@ -174,6 +180,8 @@
 		60A9684128829ACF00889B11 /* Textures */ = {
 			isa = PBXGroup;
 			children = (
+				6052E98729052E4000F6BBFA /* marble.jpeg */,
+				6052E98629052E3F00F6BBFA /* metal.png */,
 				6043774428B0C3D200634484 /* crateEmissionMap.jpeg */,
 				6043774328B0C00C00634484 /* crateSpecularColour.png */,
 				60CB4EE128B0B95400FABDCE /* crateSpecular.png */,

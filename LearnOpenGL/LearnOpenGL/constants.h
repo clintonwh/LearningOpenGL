@@ -23,6 +23,10 @@ const char* basicFragmentShaderPath = "/Users/williamclinton/Xcode/LearnOpenGL/S
 const char* lightCubeVertexShaderPath = "/Users/williamclinton/Xcode/LearnOpenGL/Shaders/lightCube.vs";
 const char* lightCubeFragmentShaderPath = "/Users/williamclinton/Xcode/LearnOpenGL/Shaders/lightCube.fs";
 
+//DepthTesting
+const char* depthTextingVertexShaderPath = "/Users/williamclinton/Xcode/LearnOpenGL/Shaders/depthTesting.vs";
+const char* depthTextingFragmentShaderPath = "/Users/williamclinton/Xcode/LearnOpenGL/Shaders/depthTesting.fs";
+
 //TextureConstants
 const char* wallTexturePath = "/Users/williamclinton/Xcode/LearnOpenGL/Textures/wall.jpeg";
 const char* containerTexturePath = "/Users/williamclinton/Xcode/LearnOpenGL/Textures/container.jpeg";
@@ -33,6 +37,8 @@ const char* crateSpecularColourTexturePath = "/Users/williamclinton/Xcode/LearnO
 const char* crateEmissionTexturePath = "/Users/williamclinton/Xcode/LearnOpenGL/Textures/crateEmissionMap.jpeg";
 const char* crateSpecularGreyScaleTexturePath = "/Users/williamclinton/Xcode/LearnOpenGL/Textures/crateGreyScale.png";
 const char* crateSpecularGreyScaleDarkTexturePath = "/Users/williamclinton/Xcode/LearnOpenGL/Textures/crateGreyScaleDark.png";
+const char* marbleTexturePath = "/Users/williamclinton/Xcode/LearnOpenGL/Textures/marble.jpeg";
+const char* metalTexturePath = "/Users/williamclinton/Xcode/LearnOpenGL/Textures/metal.png";
 
 std::string const backpackObjectPath = "/Users/williamclinton/Xcode/LearnOpenGL/Objects/backpack/backpack.obj";
 std::string const carObjectPath = "/Users/williamclinton/Xcode/LearnOpenGL/Objects/mercedes/mercedes.obj";
