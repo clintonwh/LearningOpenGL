@@ -32,6 +32,7 @@ bool enableMouse = false;
 bool enableImGui = true;
 bool rotateObject = false;
 bool restartRoatation = false;
+bool flipVertically = true;
 
 // settings
 const float multiplier = 1.5;
@@ -95,7 +96,8 @@ int main()
     }
 
     // tell stb_image.h to flip loaded texture's on the y-axis (before loading model).
-    stbi_set_flip_vertically_on_load(true);
+    if(flipVertically)
+        stbi_set_flip_vertically_on_load(true);
     
     // Setup Dear ImGui context
     if(enableImGui)
@@ -132,8 +134,8 @@ int main()
 
         // render
         // ------
-        //glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
-        glClearColor(0.95f, 0.95f, 0.95f, 1.0f);
+        glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
+        //glClearColor(0.95f, 0.95f, 0.95f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         // don't forget to enable shader before setting uniforms
