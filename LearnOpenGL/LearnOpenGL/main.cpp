@@ -235,7 +235,7 @@ int main()
         glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
         //glClearColor(0.95f, 0.95f, 0.95f, 1.0f);
         
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT); //stencil buffer will be all zeros
 
         // don't forget to enable shader before setting uniforms
         //ourShader.use();
@@ -260,8 +260,8 @@ int main()
         glDrawArrays(GL_TRIANGLES, 0, 6);
         glBindVertexArray(0);
         
-        glStencilFunc(GL_ALWAYS, 1, 0xFF);
-        glStencilMask(0xFF);
+        glStencilFunc(GL_ALWAYS, 1, 0xFF);      //all fragments should pass
+        glStencilMask(0xFF);                    //enable writing to the stencil buffer
         
         // cubes
         glBindVertexArray(cubeVAO);
@@ -275,8 +275,8 @@ int main()
         ourShader.setMat4("model", model);
         glDrawArrays(GL_TRIANGLES, 0, 36);
         
-        glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
-        glStencilMask(0x00);
+        glStencilFunc(GL_NOTEQUAL, 1, 0xFF);    //this results in only the parts outside the previously objects being drawn (due to GL_REPLACE)
+        glStencilMask(0x00);                    //disable writing to the stencil buffer
         glDisable(GL_DEPTH_TEST);
         
         borderShader.use();
