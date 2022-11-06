@@ -105,7 +105,7 @@ int main()
         myImGui.Init(window, glsl_version);
 
     glEnable(GL_DEPTH_TEST);
-    glDepthFunc(GL_ALWAYS);
+    //glDepthFunc(GL_ALWAYS);
 
     // load models
     // -----------
