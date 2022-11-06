@@ -105,7 +105,9 @@ int main()
         myImGui.Init(window, glsl_version);
 
     glEnable(GL_DEPTH_TEST);
-    //glDepthFunc(GL_ALWAYS);
+    glEnable(GL_STENCIL_TEST);
+    glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
+    glStencilOp(GL_REPLACE, GL_KEEP, GL_REPLACE);
 
     // load models
     // -----------
@@ -113,7 +115,8 @@ int main()
     
     // build and compile shaders
     // -------------------------
-    Shader ourShader(depthTextingVertexShaderPath, depthTextingFragmentShaderPath);
+    Shader ourShader(depthTestingVertexShaderPath, depthTestingFragmentShaderPath);
+    Shader borderShader(stencilTestingVertexShaderPath, stencilTestingFragmentShaderPath);
 
     // set up vertex data (and buffer(s)) and configure vertex attributes
     // ------------------------------------------------------------------
@@ -206,6 +209,8 @@ int main()
     ourShader.use();
     ourShader.setInt("texture1", 0);
     
+    borderShader.use();
+    borderShader.setInt("texture1", 0);
     // render loop
     // -----------
     while (!glfwWindowShouldClose(window))
@@ -229,16 +234,35 @@ int main()
         // ------
         glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
         //glClearColor(0.95f, 0.95f, 0.95f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
         // don't forget to enable shader before setting uniforms
-        ourShader.use();
+        //ourShader.use();
         
         glm::mat4 model = glm::mat4(1.0f);
         glm::mat4 view = camera.GetViewMatrix();
         glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+        
+        borderShader.setMat4("view", view);
+        borderShader.setMat4("projection", projection);
+        
+        ourShader.use();
         ourShader.setMat4("view", view);
         ourShader.setMat4("projection", projection);
+        
+        glStencilMask(0x00); // make sure we don't update the stencil buffer while drawing the floor
+
+        // floor
+        glBindVertexArray(planeVAO);
+        glBindTexture(GL_TEXTURE_2D, floorTexture);
+        ourShader.setMat4("model", glm::mat4(1.0f));
+        glDrawArrays(GL_TRIANGLES, 0, 6);
+        glBindVertexArray(0);
+        
+        glStencilFunc(GL_ALWAYS, 1, 0xFF);
+        glStencilMask(0xFF);
+        
         // cubes
         glBindVertexArray(cubeVAO);
         glActiveTexture(GL_TEXTURE0);
@@ -250,13 +274,33 @@ int main()
         model = glm::translate(model, glm::vec3(2.0f, 0.0f, 0.0f));
         ourShader.setMat4("model", model);
         glDrawArrays(GL_TRIANGLES, 0, 36);
-        // floor
-        glBindVertexArray(planeVAO);
-        glBindTexture(GL_TEXTURE_2D, floorTexture);
-        ourShader.setMat4("model", glm::mat4(1.0f));
-        glDrawArrays(GL_TRIANGLES, 0, 6);
+        
+        glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
+        glStencilMask(0x00);
+        glDisable(GL_DEPTH_TEST);
+        
+        borderShader.use();
+        float scale = 1.1f;
+        
+        //DrawTwoScaledUpContainers
+        model = glm::mat4(1.0f);
+        glBindVertexArray(cubeVAO);
+        glBindTexture(GL_TEXTURE_2D, cubeTexture);
+        model = glm::translate(model, glm::vec3(-1.0f, 0.0f, -1.0f));
+        model = glm::scale(model, glm::vec3(scale, scale, scale));
+        borderShader.setMat4("model", model);
+        glDrawArrays(GL_TRIANGLES, 0, 36);
+        model = glm::mat4(1.0f);
+        model = glm::translate(model, glm::vec3(2.0f, 0.0f, 0.0f));
+        model = glm::scale(model, glm::vec3(scale, scale, scale));
+        borderShader.setMat4("model", model);
+        glDrawArrays(GL_TRIANGLES, 0, 36);
         glBindVertexArray(0);
-
+        
+        glStencilMask(0xFF);
+        glStencilFunc(GL_ALWAYS, 1, 0xFF);
+        glEnable(GL_DEPTH_TEST);
+        
 //        // view/projection transformations
 //        glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
 //        glm::mat4 view = camera.GetViewMatrix();

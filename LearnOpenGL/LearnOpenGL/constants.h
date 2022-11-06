@@ -24,8 +24,12 @@ const char* lightCubeVertexShaderPath = "/Users/williamclinton/Xcode/LearnOpenGL
 const char* lightCubeFragmentShaderPath = "/Users/williamclinton/Xcode/LearnOpenGL/Shaders/lightCube.fs";
 
 //DepthTesting
-const char* depthTextingVertexShaderPath = "/Users/williamclinton/Xcode/LearnOpenGL/Shaders/depthTesting.vs";
-const char* depthTextingFragmentShaderPath = "/Users/williamclinton/Xcode/LearnOpenGL/Shaders/depthTesting.fs";
+const char* depthTestingVertexShaderPath = "/Users/williamclinton/Xcode/LearnOpenGL/Shaders/depthTesting.vs";
+const char* depthTestingFragmentShaderPath = "/Users/williamclinton/Xcode/LearnOpenGL/Shaders/depthTesting.fs";
+
+//StencilTesting
+const char* stencilTestingVertexShaderPath = "/Users/williamclinton/Xcode/LearnOpenGL/Shaders/stencilTestingBorder.vs";
+const char* stencilTestingFragmentShaderPath = "/Users/williamclinton/Xcode/LearnOpenGL/Shaders/stencilTestingBorder.fs";
 
 //TextureConstants
 const char* wallTexturePath = "/Users/williamclinton/Xcode/LearnOpenGL/Textures/wall.jpeg";
