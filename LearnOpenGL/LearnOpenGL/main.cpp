@@ -5,15 +5,15 @@
 #include <imgui/imgui_impl_glfw.h>
 #include <imgui/imgui_impl_opengl3.h>
 
-#include <learning/shader_m.h>
-#include <learning/camera.h>
-#include <constants.h>
+#include "learning/shader_m.h"
+#include "learning/camera.h"
+#include "constants.h"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#include "practice/UseImGui.hpp"
+#include "UI/UseImGui.hpp"
 #include "practice/LightValues.h"
 
 #include "learning/model.h"
@@ -186,6 +186,7 @@ int main()
     glEnableVertexAttribArray(1);
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
     glBindVertexArray(0);
+    
     // plane VAO
     unsigned int planeVAO, planeVBO;
     glGenVertexArrays(1, &planeVAO);

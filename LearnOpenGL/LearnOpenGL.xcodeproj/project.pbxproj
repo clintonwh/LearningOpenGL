@@ -156,12 +156,19 @@
 		603E589C28F41062008E979E /* practice */ = {
 			isa = PBXGroup;
 			children = (
-				60E6F1D528D6D47A009252A3 /* UseImGui.cpp */,
-				60E6F1D628D6D47A009252A3 /* UseImGui.hpp */,
 				6008AF6828DF04A700CB544D /* LightValues.cpp */,
 				6008AF6928DF04A700CB544D /* LightValues.h */,
 			);
 			path = practice;
+			sourceTree = "<group>";
+		};
+		606655842AB4AEA600EEBB00 /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				60E6F1D528D6D47A009252A3 /* UseImGui.cpp */,
+				60E6F1D628D6D47A009252A3 /* UseImGui.hpp */,
+			);
+			path = UI;
 			sourceTree = "<group>";
 		};
 		60A9683B2882884F00889B11 /* Shaders */ = {
@@ -197,6 +204,13 @@
 			path = Textures;
 			sourceTree = "<group>";
 		};
+		60B7DF942A6585E900C90366 /* Helper */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Helper;
+			sourceTree = "<group>";
+		};
 		60DE22A4284DD83000942C33 = {
 			isa = PBXGroup;
 			children = (
@@ -220,6 +234,8 @@
 		60DE22AF284DD83000942C33 /* LearnOpenGL */ = {
 			isa = PBXGroup;
 			children = (
+				606655842AB4AEA600EEBB00 /* UI */,
+				60B7DF942A6585E900C90366 /* Helper */,
 				603E589C28F41062008E979E /* practice */,
 				60DE22B0284DD83000942C33 /* main.cpp */,
 				60A9684B2882A68E00889B11 /* constants.h */,
