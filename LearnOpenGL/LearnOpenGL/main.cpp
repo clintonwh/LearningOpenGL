@@ -105,16 +105,11 @@ int main()
     glEnable(GL_STENCIL_TEST);
     glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
     glStencilOp(GL_REPLACE, GL_KEEP, GL_REPLACE);
-
-    // load models
-    // -----------
-    //Model ourModel(backpackObjectPath);
     
     // build and compile shaders
     // -------------------------
     Shader ourShader(depthTestingVertexShaderPath, depthTestingFragmentShaderPath);
     Shader borderShader(stencilTestingVertexShaderPath, stencilTestingFragmentShaderPath);
-
     
     // cube VAO
     unsigned int cubeVAO, cubeVBO;
@@ -154,15 +149,11 @@ int main()
     
     borderShader.use();
     borderShader.setInt("texture1", 0);
+    
     // render loop
     // -----------
     while (!glfwWindowShouldClose(window))
     {
-//        if(restartRoatation){
-//            rotation = glm::radians(0.0f);
-//            restartRoatation = false;
-//        }
-            
         // per-frame time logic
         // --------------------
         float currentFrame = static_cast<float>(glfwGetTime());
@@ -176,17 +167,14 @@ int main()
         // render
         // ------
         glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
-        //glClearColor(0.95f, 0.95f, 0.95f, 1.0f);
         
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT); //stencil buffer will be all zeros
-
-        // don't forget to enable shader before setting uniforms
-        //ourShader.use();
         
         glm::mat4 model = glm::mat4(1.0f);
         glm::mat4 view = camera.GetViewMatrix();
         glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
         
+        // don't forget to enable shader before setting uniforms
         borderShader.setMat4("view", view);
         borderShader.setMat4("projection", projection);
         
@@ -243,33 +231,10 @@ int main()
         glStencilMask(0xFF);
         glStencilFunc(GL_ALWAYS, 1, 0xFF);
         glEnable(GL_DEPTH_TEST);
-        
-//        // view/projection transformations
-//        glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
-//        glm::mat4 view = camera.GetViewMatrix();
-//        ourShader.setMat4("projection", projection);
-//        ourShader.setMat4("view", view);
-//
-//        // render the loaded model
-//        glm::mat4 model = glm::mat4(1.0f);
-//        model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f)); // translate it down so it's at the center of the scene
-//
-//        if(rotateObject){
-//            rotation += glm::radians(1.0f);
-//            //rotation = (float)glfwGetTime();
-//            //model = glm::rotate(model, (float)glfwGetTime(), glm::vec3(0.0f, 1.0f, 0.0f));
-//        }
-//
-//        model = glm::rotate(model, rotation, glm::vec3(0.0f, 1.0f, 0.0f));
-//
-//        model = glm::scale(model, glm::vec3(0.5f, 0.5f, 0.5f));    // it's a bit too big for our scene, so scale it down
-//        ourShader.setMat4("model", model);
-//        ourModel.Draw(ourShader);
 
         if(enableImGui){
             myImGui.NewFrame();
             myImGui.Update(rotateObject, restartRoatation);
-            //myImGui.Update();
             myImGui.Render();
         }
 
@@ -324,8 +289,6 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 glm::mat4 generateModelMatrix()
 {
     glm::mat4 model = glm::mat4(1.0f);
-    //model = glm::rotate(model, (float)glfwGetTime() * glm::radians(50.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-
     return model;
 }
 
@@ -389,43 +352,4 @@ void mouseControls(GLFWwindow* window){
     else{
         glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
     }
-}
-
-// utility function for loading a 2D texture from file
-// ---------------------------------------------------
-unsigned int loadTexture(char const *path)
-{
-    unsigned int textureID;
-    glGenTextures(1, &textureID);
-
-    int width, height, nrComponents;
-    unsigned char *data = stbi_load(path, &width, &height, &nrComponents, 0);
-    if (data)
-    {
-        GLenum format;
-        if (nrComponents == 1)
-            format = GL_RED;
-        else if (nrComponents == 3)
-            format = GL_RGB;
-        else if (nrComponents == 4)
-            format = GL_RGBA;
-
-        glBindTexture(GL_TEXTURE_2D, textureID);
-        glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
-        glGenerateMipmap(GL_TEXTURE_2D);
-
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-        stbi_image_free(data);
-    }
-    else
-    {
-        std::cout << "Texture failed to load at path: " << path << std::endl;
-        stbi_image_free(data);
-    }
-
-    return textureID;
 }
