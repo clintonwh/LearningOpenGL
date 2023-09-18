@@ -4,8 +4,11 @@
 //
 //  Created by William Clinton on 24/09/2022.
 //
-#include <iostream>
+
 #include "LightValues.h"
+
+#include <iostream>
+#include <stdio.h>
 
 LightValues::LightValues(){
     pointLightColorValues = Create2DArrayFloat(4,4);

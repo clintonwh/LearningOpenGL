@@ -8,6 +8,9 @@
 #ifndef TextureHelper_hpp
 #define TextureHelper_hpp
 
-#include <stdio.h>
+class TextureHelper {
+public:
+    static unsigned int loadTexture(char const *path);
+};
 
 #endif /* TextureHelper_hpp */

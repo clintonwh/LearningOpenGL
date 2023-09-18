@@ -8,8 +8,6 @@
 #ifndef LightValues_h
 #define LightValues_h
 
-#include <stdio.h>
-
 class LightValues {
 private:
     float** pointLightColorValues;

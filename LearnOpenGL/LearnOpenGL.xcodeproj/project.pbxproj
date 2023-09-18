@@ -15,6 +15,7 @@
 		6008AF6728DEFFD900CB544D /* imgui_draw.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6008AF5A28DEFFD800CB544D /* imgui_draw.cpp */; };
 		6008AF6A28DF04A700CB544D /* LightValues.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6008AF6828DF04A700CB544D /* LightValues.cpp */; };
 		603E589528F3FFCD008E979E /* libassimp.5.2.4.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 603E589428F3FFCD008E979E /* libassimp.5.2.4.dylib */; };
+		606655882AB4BD3500EEBB00 /* TextureHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 606655862AB4BD3500EEBB00 /* TextureHelper.cpp */; };
 		60DE22B1284DD83000942C33 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 60DE22B0284DD83000942C33 /* main.cpp */; };
 		60DE22BB284DDA8100942C33 /* libglfw3.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 60DE22BA284DDA8100942C33 /* libglfw3.a */; };
 		60DE22C0284DDB5300942C33 /* glad.c in Sources */ = {isa = PBXBuildFile; fileRef = 60DE22BF284DDB5300942C33 /* glad.c */; };
@@ -73,12 +74,13 @@
 		6052E98729052E4000F6BBFA /* marble.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = marble.jpeg; sourceTree = "<group>"; };
 		6052E98829052F7C00F6BBFA /* depthTesting.vs */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = depthTesting.vs; sourceTree = "<group>"; };
 		6052E98929052F7C00F6BBFA /* depthTesting.fs */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = depthTesting.fs; sourceTree = "<group>"; };
+		606655862AB4BD3500EEBB00 /* TextureHelper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TextureHelper.cpp; sourceTree = "<group>"; };
+		606655872AB4BD3500EEBB00 /* TextureHelper.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = TextureHelper.hpp; sourceTree = "<group>"; };
 		607D8F9928EAF5B000126AF1 /* mesh.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = mesh.h; sourceTree = "<group>"; };
 		60A9683A2882873C00889B11 /* shader_s.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = shader_s.h; sourceTree = "<group>"; };
 		60A9684228829AF600889B11 /* wall.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = wall.jpeg; sourceTree = "<group>"; };
 		60A9684528829DAF00889B11 /* container.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = container.jpeg; sourceTree = "<group>"; };
 		60A9684628829DC200889B11 /* awesomeface.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = awesomeface.png; sourceTree = "<group>"; };
-		60A968472882A0C400889B11 /* stb_image */ = {isa = PBXFileReference; lastKnownFileType = folder; name = stb_image; path = Externals/Include/stb_image; sourceTree = "<group>"; };
 		60A9684A2882A17D00889B11 /* stb_image.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stb_image.h; sourceTree = "<group>"; };
 		60A9684B2882A68E00889B11 /* constants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = constants.h; sourceTree = "<group>"; };
 		60B88DBE288BCC4F00FBDCB9 /* glm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = glm; path = Externals/Include/glm; sourceTree = SOURCE_ROOT; };
@@ -140,7 +142,7 @@
 			path = imgui;
 			sourceTree = "<group>";
 		};
-		603E589A28F40FAC008E979E /* learning */ = {
+		603E589A28F40FAC008E979E /* Learning */ = {
 			isa = PBXGroup;
 			children = (
 				607D8F9928EAF5B000126AF1 /* mesh.h */,
@@ -150,16 +152,16 @@
 				603E589628F408D2008E979E /* shader.h */,
 				60A9683A2882873C00889B11 /* shader_s.h */,
 			);
-			path = learning;
+			path = Learning;
 			sourceTree = "<group>";
 		};
-		603E589C28F41062008E979E /* practice */ = {
+		603E589C28F41062008E979E /* Light */ = {
 			isa = PBXGroup;
 			children = (
 				6008AF6828DF04A700CB544D /* LightValues.cpp */,
 				6008AF6928DF04A700CB544D /* LightValues.h */,
 			);
-			path = practice;
+			path = Light;
 			sourceTree = "<group>";
 		};
 		606655842AB4AEA600EEBB00 /* UI */ = {
@@ -207,6 +209,8 @@
 		60B7DF942A6585E900C90366 /* Helper */ = {
 			isa = PBXGroup;
 			children = (
+				606655862AB4BD3500EEBB00 /* TextureHelper.cpp */,
+				606655872AB4BD3500EEBB00 /* TextureHelper.hpp */,
 			);
 			path = Helper;
 			sourceTree = "<group>";
@@ -236,7 +240,7 @@
 			children = (
 				606655842AB4AEA600EEBB00 /* UI */,
 				60B7DF942A6585E900C90366 /* Helper */,
-				603E589C28F41062008E979E /* practice */,
+				603E589C28F41062008E979E /* Light */,
 				60DE22B0284DD83000942C33 /* main.cpp */,
 				60A9684B2882A68E00889B11 /* constants.h */,
 			);
@@ -256,7 +260,7 @@
 		60DE22B8284DD90900942C33 /* Include */ = {
 			isa = PBXGroup;
 			children = (
-				603E589A28F40FAC008E979E /* learning */,
+				603E589A28F40FAC008E979E /* Learning */,
 				60A9684A2882A17D00889B11 /* stb_image.h */,
 				6008AF5328DEFFC400CB544D /* imgui */,
 				60DE22BE284DDB1400942C33 /* KHR */,
@@ -279,7 +283,6 @@
 			isa = PBXGroup;
 			children = (
 				603E589428F3FFCD008E979E /* libassimp.5.2.4.dylib */,
-				60A968472882A0C400889B11 /* stb_image */,
 				60DE22CA284DDCAA00942C33 /* CoreGraphics.framework */,
 				60DE22C8284DDC9E00942C33 /* Foundation.framework */,
 				60DE22C6284DDC9200942C33 /* CoreFoundation.framework */,
@@ -350,6 +353,7 @@
 				6008AF6228DEFFD900CB544D /* imgui.cpp in Sources */,
 				60DE22C0284DDB5300942C33 /* glad.c in Sources */,
 				6008AF6728DEFFD900CB544D /* imgui_draw.cpp in Sources */,
+				606655882AB4BD3500EEBB00 /* TextureHelper.cpp in Sources */,
 				6008AF6328DEFFD900CB544D /* imgui_impl_glfw.cpp in Sources */,
 				6008AF6428DEFFD900CB544D /* imgui_impl_opengl3.cpp in Sources */,
 				60E6F1D728D6D47A009252A3 /* UseImGui.cpp in Sources */,
@@ -517,7 +521,7 @@
 				60DE22B3284DD83000942C33 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Debug;
 		};
 		60DE22B4284DD83000942C33 /* Build configuration list for PBXNativeTarget "LearnOpenGL" */ = {
 			isa = XCConfigurationList;
@@ -526,7 +530,7 @@
 				60DE22B6284DD83000942C33 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Debug;
 		};
 /* End XCConfigurationList section */
 	};
