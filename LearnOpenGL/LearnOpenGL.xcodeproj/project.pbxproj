@@ -14,10 +14,8 @@
 		6008AF6628DEFFD900CB544D /* imgui_tables.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6008AF5728DEFFD800CB544D /* imgui_tables.cpp */; };
 		6008AF6728DEFFD900CB544D /* imgui_draw.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6008AF5A28DEFFD800CB544D /* imgui_draw.cpp */; };
 		6008AF6A28DF04A700CB544D /* LightValues.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6008AF6828DF04A700CB544D /* LightValues.cpp */; };
-		60AEBD9B2F3FE08200AE6C01 /* libassimp.6.0.4.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 60AEBD9A2F3FE08200AE6C01 /* libassimp.6.0.4.dylib */; };
-		60AEBD9C2F3FE08200AE6C01 /* libassimp.6.0.4.dylib in Embed Libraries */ = {isa = PBXBuildFile; fileRef = 60AEBD9A2F3FE08200AE6C01 /* libassimp.6.0.4.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		60AEBD9F2F3FE1E500AE6C01 /* libglfw.3.4.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 60AEBD9E2F3FE1E500AE6C01 /* libglfw.3.4.dylib */; };
-		60AEBDA02F3FE1E500AE6C01 /* libglfw.3.4.dylib in Embed Libraries */ = {isa = PBXBuildFile; fileRef = 60AEBD9E2F3FE1E500AE6C01 /* libglfw.3.4.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		60AEBDA12F3FE50500AE6C01 /* libglfw.3.4.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 60AEBD9E2F3FE1E500AE6C01 /* libglfw.3.4.dylib */; };
+		60AEBDA22F3FE50500AE6C01 /* libglfw.3.4.dylib in Embed Libraries */ = {isa = PBXBuildFile; fileRef = 60AEBD9E2F3FE1E500AE6C01 /* libglfw.3.4.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		60DE22B1284DD83000942C33 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 60DE22B0284DD83000942C33 /* main.cpp */; };
 		60DE22C0284DDB5300942C33 /* glad.c in Sources */ = {isa = PBXBuildFile; fileRef = 60DE22BF284DDB5300942C33 /* glad.c */; };
 		60DE22C3284DDC6E00942C33 /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 60DE22C2284DDC6E00942C33 /* AppKit.framework */; };
@@ -29,14 +27,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		60AEBD9D2F3FE08200AE6C01 /* Embed Libraries */ = {
+		60AEBDA32F3FE50500AE6C01 /* Embed Libraries */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				60AEBD9C2F3FE08200AE6C01 /* libassimp.6.0.4.dylib in Embed Libraries */,
-				60AEBDA02F3FE1E500AE6C01 /* libglfw.3.4.dylib in Embed Libraries */,
+				60AEBDA22F3FE50500AE6C01 /* libglfw.3.4.dylib in Embed Libraries */,
 			);
 			name = "Embed Libraries";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -122,10 +119,9 @@
 			files = (
 				60DE22CB284DDCAA00942C33 /* CoreGraphics.framework in Frameworks */,
 				60DE22C9284DDC9E00942C33 /* Foundation.framework in Frameworks */,
-				60AEBD9B2F3FE08200AE6C01 /* libassimp.6.0.4.dylib in Frameworks */,
 				60DE22C7284DDC9200942C33 /* CoreFoundation.framework in Frameworks */,
+				60AEBDA12F3FE50500AE6C01 /* libglfw.3.4.dylib in Frameworks */,
 				60DE22C5284DDC8400942C33 /* IOKit.framework in Frameworks */,
-				60AEBD9F2F3FE1E500AE6C01 /* libglfw.3.4.dylib in Frameworks */,
 				60DE22C3284DDC6E00942C33 /* AppKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -297,7 +293,7 @@
 				60DE22A9284DD83000942C33 /* Sources */,
 				60DE22AA284DD83000942C33 /* Frameworks */,
 				60DE22AB284DD83000942C33 /* CopyFiles */,
-				60AEBD9D2F3FE08200AE6C01 /* Embed Libraries */,
+				60AEBDA32F3FE50500AE6C01 /* Embed Libraries */,
 			);
 			buildRules = (
 			);
@@ -483,8 +479,8 @@
 				);
 				LIBRARY_SEARCH_PATHS = (
 					"$(PROJECT_DIR)/Externals/Libraries",
-					/opt/homebrew/Cellar/glfw/3.4/lib,
 					/opt/homebrew/opt/assimp/lib,
+					/opt/homebrew/Cellar/glfw/3.4/lib/,
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -503,8 +499,8 @@
 				);
 				LIBRARY_SEARCH_PATHS = (
 					"$(PROJECT_DIR)/Externals/Libraries",
-					/opt/homebrew/Cellar/glfw/3.4/lib,
 					/opt/homebrew/opt/assimp/lib,
+					/opt/homebrew/Cellar/glfw/3.4/lib/,
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
