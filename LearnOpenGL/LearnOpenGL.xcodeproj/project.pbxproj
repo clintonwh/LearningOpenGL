@@ -483,10 +483,8 @@
 				);
 				LIBRARY_SEARCH_PATHS = (
 					"$(PROJECT_DIR)/Externals/Libraries",
-					/usr/local/Cellar/assimp/5.2.5/lib/,
-					/opt/homebrew/Cellar/assimp/6.0.4_1/lib/,
-					/opt/homebrew/Cellar/assimp/6.0.4_1/lib,
 					/opt/homebrew/Cellar/glfw/3.4/lib,
+					/opt/homebrew/opt/assimp/lib,
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -505,10 +503,8 @@
 				);
 				LIBRARY_SEARCH_PATHS = (
 					"$(PROJECT_DIR)/Externals/Libraries",
-					/usr/local/Cellar/assimp/5.2.5/lib/,
-					/opt/homebrew/Cellar/assimp/6.0.4_1/lib/,
-					/opt/homebrew/Cellar/assimp/6.0.4_1/lib,
 					/opt/homebrew/Cellar/glfw/3.4/lib,
+					/opt/homebrew/opt/assimp/lib,
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
